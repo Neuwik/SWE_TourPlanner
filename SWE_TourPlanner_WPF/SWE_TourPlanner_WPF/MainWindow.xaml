@@ -6,7 +6,55 @@
         xmlns:local="clr-namespace:SWE_TourPlanner_WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <local:ViewModel/>
+    </Window.DataContext>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
+        <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="4" ItemsSource="{Binding Tours}" SelectedItem="{Binding Path=SelectedTour}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Tour" DisplayMemberBinding="{Binding Name}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        
+        <TabControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="2">
+            <TabItem Header="General">
+                <TextBlock Text="{Binding SelectedTour.Name}"/>
+            </TabItem>
+            <TabItem Header="Route">
+                <TextBlock Text="asfklhsadfklh"/>
+            </TabItem>
+            <TabItem Header="Misc">
+                <TextBlock Text="Some MISC"/>
+            </TabItem>
+        </TabControl>
+
+        <DataGrid Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" Grid.RowSpan="2" AutoGenerateColumns="False" ItemsSource="{Binding Tours, UpdateSourceTrigger=PropertyChanged}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}"/>
+                <DataGridTextColumn Header="From" Binding="{Binding From}"/>
+                <DataGridTextColumn Header="To" Binding="{Binding To}"/>
+                <DataGridTextColumn Header="Transport Type" Binding="{Binding TransportType}"/>
+                <DataGridTextColumn Header="Distance" Binding="{Binding Distance}"/>
+                <DataGridTextColumn Header="Time" Binding="{Binding Time}"/>
+                <DataGridTextColumn Header="Route Information" Binding="{Binding RouteInformation}"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
