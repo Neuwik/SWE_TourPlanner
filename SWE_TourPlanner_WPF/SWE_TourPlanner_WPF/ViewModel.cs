@@ -14,8 +14,32 @@ namespace SWE_TourPlanner_WPF
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Tour SelectedTour { get; set; }
-        public Tour TempTour { get; set; }
+        private Tour _selectedTour;
+        public Tour SelectedTour
+        {
+            get { return _selectedTour; }
+            set
+            {
+                if (_selectedTour != value)
+                {
+                    _selectedTour = value;
+                    OnPropertyChanged("SelectedTour");
+                }
+            }
+        }
+        private Tour _tempTour;
+        public Tour TempTour
+        {
+            get { return _tempTour; }
+            set
+            {
+                if (_tempTour != value)
+                {
+                    _tempTour = value;
+                    OnPropertyChanged("TempTour");
+                }
+            }
+        }
         public ObservableCollection<Tour> Tours { get; set; }
 
         public ViewModel() 

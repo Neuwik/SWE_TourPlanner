@@ -9,6 +9,9 @@
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <local:ETransportTypeConverter x:Key="ETransportTypeConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -17,30 +20,71 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition />
+            <RowDefinition Height="40"/>
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="4" ItemsSource="{Binding Tours}" SelectedItem="{Binding Path=SelectedTour}">
+        <Button x:Name="btn_CreateTour" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Click="btn_CreateTour_Click">Create Tour</Button>
+        
+        <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="4" ItemsSource="{Binding Tours}" SelectedItem="{Binding SelectedTour}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Tour" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Tours" DisplayMemberBinding="{Binding Name}"/>
                 </GridView>
             </ListView.View>
         </ListView>
         
         <TabControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="2">
             <TabItem Header="General">
-                <TextBlock Text="{Binding SelectedTour.Name}"/>
+                <WrapPanel Orientation="Horizontal">
+                    <StackPanel Margin="5,5,0,0">
+                        <Label Content="Name:"/>
+                        <TextBox Text="{Binding SelectedTour.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="5,5,0,0">
+                        <Label Content="Description:"/>
+                        <TextBox Text="{Binding SelectedTour.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="5,5,0,0">
+                        <Label Content="From:"/>
+                        <TextBox Text="{Binding SelectedTour.From, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="5,5,0,0">
+                        <Label Content="To:"/>
+                        <TextBox Text="{Binding SelectedTour.To, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                
+                    <StackPanel Margin="5,5,0,0">
+                        <Label Content="Transport Type:"/>
+                        <RadioButton x:Name="rbtn_TransportType_Bike" Content="Bike" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Bike}}"/>
+                        <RadioButton x:Name="rbtn_TransportType_Car" Content="Car" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Car}}"/>
+                        <RadioButton x:Name="rbtn_TransportType_Foot" Content="Foot" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Foot}}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="5,5,0,0">
+                        <Label Content="Distance (in km):"/>
+                        <Slider Value="{Binding SelectedTour.Distance, Mode=TwoWay}" Minimum="0" Maximum="500"/>
+                        <TextBlock Text="{Binding SelectedTour.Distance, Mode=TwoWay}"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="5,5,0,0">
+                        <Label Content="Time (in min):"/>
+                        <Slider Value="{Binding SelectedTour.Time, Mode=TwoWay}" Minimum="0" Maximum="360"/>
+                        <TextBlock Text="{Binding SelectedTour.Time, Mode=TwoWay}"/>
+                    </StackPanel>
+                </WrapPanel>
             </TabItem>
             <TabItem Header="Route">
-                <TextBlock Text="asfklhsadfklh"/>
+                <Image Source="/route.png"/>
             </TabItem>
             <TabItem Header="Misc">
-                <TextBlock Text="Some MISC"/>
+                <TextBox Text="{Binding SelectedTour.RouteInformation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </TabItem>
         </TabControl>
 

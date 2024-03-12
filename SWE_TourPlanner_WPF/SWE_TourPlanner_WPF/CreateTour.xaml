@@ -1,0 +1,59 @@
+﻿<Window x:Class="SWE_TourPlanner_WPF.CreateTour"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SWE_TourPlanner_WPF"
+        mc:Ignorable="d"
+        Title="CreateTour" Height="450" Width="800">
+    <Window.DataContext>
+        <local:ViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <local:ETransportTypeConverter x:Key="ETransportTypeConverter"/>
+    </Window.Resources>
+    <Grid>
+        <WrapPanel Orientation="Horizontal">
+            <StackPanel Margin="5,5,0,0">
+                <Label Content="Name:"/>
+                <TextBox Text="{Binding TempTour.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <StackPanel Margin="5,5,0,0">
+                <Label Content="Description:"/>
+                <TextBox Text="{Binding TempTour.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <StackPanel Margin="5,5,0,0">
+                <Label Content="From:"/>
+                <TextBox Text="{Binding TempTour.From, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <StackPanel Margin="5,5,0,0">
+                <Label Content="To:"/>
+                <TextBox Text="{Binding TempTour.To, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+
+            <StackPanel Margin="5,5,0,0">
+                <Label Content="Transport Type:"/>
+                <RadioButton x:Name="rbtn_TransportType_Bike" Content="Bike" IsChecked="{Binding TempTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Bike}}"/>
+                <RadioButton x:Name="rbtn_TransportType_Car" Content="Car" IsChecked="{Binding TempTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Car}}"/>
+                <RadioButton x:Name="rbtn_TransportType_Foot" Content="Foot" IsChecked="{Binding TempTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Foot}}"/>
+            </StackPanel>
+
+            <StackPanel Margin="5,5,0,0">
+                <Label Content="Distance (in km):"/>
+                <Slider Value="{Binding TempTour.Distance, Mode=TwoWay}" Minimum="0" Maximum="500"/>
+                <TextBlock Text="{Binding TempTour.Distance, Mode=TwoWay}"/>
+            </StackPanel>
+
+            <StackPanel Margin="5,5,0,0">
+                <Label Content="Time (in min):"/>
+                <Slider Value="{Binding TempTour.Time, Mode=TwoWay}" Minimum="0" Maximum="360"/>
+                <TextBlock Text="{Binding TempTour.Time, Mode=TwoWay}"/>
+            </StackPanel>
+
+            <Button x:Name="btn_CreateTour" Margin="5,5,0,0" Click="btn_CreateTour_Click">Create Tour</Button>
+        </WrapPanel>
+    </Grid>
+</Window>

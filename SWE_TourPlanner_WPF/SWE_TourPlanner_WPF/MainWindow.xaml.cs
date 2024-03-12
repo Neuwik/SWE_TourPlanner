@@ -40,5 +40,18 @@ namespace SWE_TourPlanner_WPF
                 ((ViewModel)DataContext).AddTour();
             }
         }
+
+        private void btn_CreateTour_Click(object sender, RoutedEventArgs e)
+        {
+            CreateTour createTour = new CreateTour(((ViewModel)DataContext));
+            createTour.Closed += CreateTour_Closed;
+            this.IsEnabled = false;
+            createTour.Show();
+        }
+
+        private void CreateTour_Closed(object sender, EventArgs e)
+        {
+            this.IsEnabled = true;
+        }
     }
 }
