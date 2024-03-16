@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SWE_TourPlanner_WPF"
         mc:Ignorable="d"
-        Title="CreateTour" Height="450" Width="800">
+        Title="CreateTour" Height="400" Width="600">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
@@ -13,47 +13,27 @@
         <local:ETransportTypeConverter x:Key="ETransportTypeConverter"/>
     </Window.Resources>
     <Grid>
-        <WrapPanel Orientation="Horizontal">
-            <StackPanel Margin="5,5,0,0">
-                <Label Content="Name:"/>
-                <TextBox Text="{Binding TempTour.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
-
-            <StackPanel Margin="5,5,0,0">
-                <Label Content="Description:"/>
-                <TextBox Text="{Binding TempTour.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
-
-            <StackPanel Margin="5,5,0,0">
-                <Label Content="From:"/>
-                <TextBox Text="{Binding TempTour.From, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
-
-            <StackPanel Margin="5,5,0,0">
-                <Label Content="To:"/>
-                <TextBox Text="{Binding TempTour.To, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
-
-            <StackPanel Margin="5,5,0,0">
-                <Label Content="Transport Type:"/>
-                <RadioButton x:Name="rbtn_TransportType_Bike" Content="Bike" IsChecked="{Binding TempTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Bike}}"/>
-                <RadioButton x:Name="rbtn_TransportType_Car" Content="Car" IsChecked="{Binding TempTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Car}}"/>
-                <RadioButton x:Name="rbtn_TransportType_Foot" Content="Foot" IsChecked="{Binding TempTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Foot}}"/>
-            </StackPanel>
-
-            <StackPanel Margin="5,5,0,0">
-                <Label Content="Distance (in km):"/>
-                <Slider Value="{Binding TempTour.Distance, Mode=TwoWay}" Minimum="0" Maximum="500"/>
-                <TextBlock Text="{Binding TempTour.Distance, Mode=TwoWay}"/>
-            </StackPanel>
-
-            <StackPanel Margin="5,5,0,0">
-                <Label Content="Time (in min):"/>
-                <Slider Value="{Binding TempTour.Time, Mode=TwoWay}" Minimum="0" Maximum="360"/>
-                <TextBlock Text="{Binding TempTour.Time, Mode=TwoWay}"/>
-            </StackPanel>
-
-            <Button x:Name="btn_CreateTour" Margin="5,5,0,0" Click="btn_CreateTour_Click">Create Tour</Button>
-        </WrapPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="30px"/>
+        </Grid.RowDefinitions>
+        <local:TourInputFields Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"/>
+        <Grid Grid.Column="0" Grid.Row="3" Grid.RowSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30px"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="Route Information:"/>
+            <TextBox Grid.Row="1" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="{Binding SelectedTour.RouteInformation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <Button x:Name="btn_CreateTour" Click="btn_CreateTour_Click" Command="{Binding CreateTourCommand}" Grid.Column="0" Grid.Row="6">Create Tour</Button>
     </Grid>
 </Window>

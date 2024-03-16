@@ -14,6 +14,8 @@ namespace SWE_TourPlanner_WPF
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public ObservableCollection<Tour> Tours { get; set; }
+
         private Tour _selectedTour;
         public Tour SelectedTour
         {
@@ -23,38 +25,67 @@ namespace SWE_TourPlanner_WPF
                 if (_selectedTour != value)
                 {
                     _selectedTour = value;
-                    OnPropertyChanged("SelectedTour");
+                    OnPropertyChanged(nameof(SelectedTour));
+                    OnPropertyChanged(nameof(IsTourSelected));
                 }
             }
         }
-        private Tour _tempTour;
-        public Tour TempTour
+
+        public bool IsTourSelected
         {
-            get { return _tempTour; }
-            set
+            get { return SelectedTour != null && Tours.Contains(SelectedTour); }
+        }
+
+        private ICommandHandler _openCreateWindow;
+        public ICommandHandler OpenCreateWindow
+        {
+            get
             {
-                if (_tempTour != value)
-                {
-                    _tempTour = value;
-                    OnPropertyChanged("TempTour");
-                }
+                return _openCreateWindow ?? (_openCreateWindow = new ICommandHandler(() => SelectEmtyTour(), () => true));
             }
         }
-        public ObservableCollection<Tour> Tours { get; set; }
+
+        private ICommandHandler _deleteTourCommand;
+        public ICommandHandler DeleteTourCommand
+        {
+            get
+            {
+                return _deleteTourCommand ?? (_deleteTourCommand = new ICommandHandler(() => DeleteTour(), () => IsTourSelected));
+            }
+        }
+
+        private ICommandHandler _createTourCommand;
+        public ICommandHandler CreateTourCommand
+        {
+            get
+            {
+                return _createTourCommand ?? (_createTourCommand = new ICommandHandler(() => AddTour(), () => SelectedTourIsNotEmpty()));
+            }
+        }
 
         public ViewModel() 
         {
             Tours = new ObservableCollection<Tour> { };
-            TempTour = new Tour();
+            SeedData();
+        }
+
+        public bool SelectedTourIsNotEmpty()
+        {
+            return SelectedTour != null && SelectedTour.AreAllParamsSet();
+        }
+
+        public void SelectEmtyTour()
+        {
+            SelectedTour = new Tour();
         }
 
         public void AddTour()
         {
-            Tours.Add(new Tour(TempTour));
+            SelectedTour.ImagePath = "/route.png";
+            Tours.Add(SelectedTour);
             OnPropertyChanged(nameof(Tours));
-
-            TempTour = new Tour();
-            OnPropertyChanged(nameof(TempTour));
+            OnPropertyChanged(nameof(SelectedTour));
+            OnPropertyChanged(nameof(IsTourSelected));
         }
 
         public void DeleteTour()
@@ -65,13 +96,34 @@ namespace SWE_TourPlanner_WPF
                 OnPropertyChanged(nameof(Tours));
 
                 SelectedTour = null;
-                OnPropertyChanged(nameof(SelectedTour));
             }
         }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+        private void SeedData()
+        {
+            for (int i = 1; i < 6; i++)
+            {
+                SelectedTour = new Tour()
+                {
+                    Name = $"Name {i}",
+                    Description = $"Desc {i}",
+                    From = $"From {i}",
+                    To = $"To {i}",
+                    TransportType = ETransportType.Car,
+                    Distance = i * 100,
+                    Time = i * 30,
+                    RouteInformation = $"Info {i}"
+                };
+                AddTour();
+            }
+
+            SelectedTour = null;
+            OnPropertyChanged(nameof(SelectedTour));
+            OnPropertyChanged(nameof(Tours));
         }
     }
 }

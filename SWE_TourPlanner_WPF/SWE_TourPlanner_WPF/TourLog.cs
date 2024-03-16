@@ -16,7 +16,15 @@ namespace SWE_TourPlanner_WPF
         public float TotalTime { get; set; }
         public ERating Rating { get; set; }
 
-        public TourLog() { }
+        public TourLog()
+        {
+            DateTime = DateTime.Now;
+            Comment = "---";
+            Difficulty = EDifficulty.medium;
+            TotalDistance = 0;
+            TotalTime = 0;
+            Rating = ERating.ThreeStars;
+        }
 
         public TourLog(DateTime dateTime, string comment, EDifficulty difficulty, float totalDistance, float totalTime, ERating rating)
         {

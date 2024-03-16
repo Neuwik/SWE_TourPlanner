@@ -7,9 +7,9 @@ namespace SWE_TourPlanner_WPF
 {
     public enum ETransportType
     {
-        Foot = 1,
-        Bike = 2,
-        Car = 3
+        Foot = 0,
+        Bike = 1,
+        Car = 2
     }
 
     public class ETransportTypeConverter : IValueConverter

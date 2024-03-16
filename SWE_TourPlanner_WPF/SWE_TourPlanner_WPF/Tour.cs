@@ -19,12 +19,13 @@ namespace SWE_TourPlanner_WPF
         public int Distance { get; set; }
         public int Time { get; set; }
         public string RouteInformation { get; set; }
+        public string ImagePath { get; set; } = "/none.png";
         public List<TourLog> TourLogs { get; set; } = new List<TourLog>();
 
 
         public Tour() { }
 
-        public Tour(string name, string description, string from, string to, ETransportType transportType, int distance, int time, string routeInformation, List<TourLog> tourLogs)
+        public Tour(string name, string description, string from, string to, ETransportType transportType, int distance, int time, string routeInformation, string imagePath, List<TourLog> tourLogs)
         {
             Name = name;
             Description = description;
@@ -34,6 +35,7 @@ namespace SWE_TourPlanner_WPF
             Distance = distance;
             Time = time;
             RouteInformation = routeInformation;
+            ImagePath = imagePath;
             TourLogs = tourLogs;
         }
 
@@ -47,10 +49,49 @@ namespace SWE_TourPlanner_WPF
             Distance = other.Distance;
             Time = other.Time;
             RouteInformation = other.RouteInformation;
+            ImagePath = other.ImagePath;
             foreach (TourLog tourLog in other.TourLogs)
             {
                 TourLogs.Add(new TourLog(tourLog));
             }
+        }
+
+        public bool AreAllParamsSet()
+        {
+            if (String.IsNullOrEmpty(Name))
+            {
+                return false;
+            }
+            if (String.IsNullOrEmpty(Description))
+            {
+                return false;
+            }
+            if (String.IsNullOrEmpty(From))
+            {
+                return false;
+            }
+            if (String.IsNullOrEmpty(To))
+            {
+                return false;
+            }
+            if (TransportType == null)
+            {
+                return false;
+            }
+            if (Distance < 0)
+            {
+                return false;
+            }
+            if (Time < 0)
+            {
+                return false;
+            }
+            if (String.IsNullOrEmpty(RouteInformation))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

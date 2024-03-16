@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace SWE_TourPlanner_WPF
 {
     /// <summary>
-    /// Interaktionslogik für CreateLog.xaml
+    /// Interaktionslogik für TourInputFields.xaml
     /// </summary>
-    public partial class CreateLog : Window
+    public partial class TourInputFields : UserControl
     {
-        public CreateLog()
+        public TourInputFields()
         {
             InitializeComponent();
         }

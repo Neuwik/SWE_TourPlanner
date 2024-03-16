@@ -23,22 +23,6 @@ namespace SWE_TourPlanner_WPF
         public MainWindow()
         {
             InitializeComponent();
-
-            for (int i = 1; i < 6; i++)
-            {
-                ((ViewModel)DataContext).TempTour = new Tour()
-                {
-                    Name = $"Name {i}",
-                    Description = $"Desc {i}",
-                    From = $"From {i}",
-                    To = $"To {i}",
-                    TransportType = ETransportType.Car,
-                    Distance = i * 100,
-                    Time = i * 30,
-                    RouteInformation = $"Info {i}"
-                };
-                ((ViewModel)DataContext).AddTour();
-            }
         }
 
         private void btn_CreateTour_Click(object sender, RoutedEventArgs e)

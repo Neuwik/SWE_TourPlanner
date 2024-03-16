@@ -8,10 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="none.png" />
     <None Remove="route.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="none.png" />
     <Resource Include="route.png" />
   </ItemGroup>
 

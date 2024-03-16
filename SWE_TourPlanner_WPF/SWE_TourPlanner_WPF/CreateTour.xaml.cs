@@ -27,7 +27,6 @@ namespace SWE_TourPlanner_WPF
 
         private void btn_CreateTour_Click(object sender, RoutedEventArgs e)
         {
-            ((ViewModel)DataContext).AddTour();
             this.Close();
         }
     }
