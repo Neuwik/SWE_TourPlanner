@@ -43,7 +43,15 @@
                 <local:TourInputFields/>
             </TabItem>
             <TabItem Header="Route">
-                <Image Source="{Binding SelectedTour.ImagePath}"/>
+                <Image>
+                    <Image.Source>
+                        <Binding Path="SelectedTour.ImagePath" >
+                            <Binding.TargetNullValue>
+                                <ImageSource>/none.png</ImageSource>
+                            </Binding.TargetNullValue>
+                        </Binding>
+                    </Image.Source>
+                </Image>
             </TabItem>
             <TabItem Header="Misc">
                 <TextBox TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="{Binding SelectedTour.RouteInformation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>

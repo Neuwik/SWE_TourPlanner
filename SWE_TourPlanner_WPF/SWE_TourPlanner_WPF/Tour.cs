@@ -19,7 +19,7 @@ namespace SWE_TourPlanner_WPF
         public int Distance { get; set; }
         public int Time { get; set; }
         public string RouteInformation { get; set; }
-        public string ImagePath { get; set; } = "/none.png";
+        public string ImagePath { get; set; }
         public List<TourLog> TourLogs { get; set; } = new List<TourLog>();
 
 
