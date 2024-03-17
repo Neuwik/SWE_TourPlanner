@@ -29,7 +29,7 @@
 
         <Button x:Name="btn_CreateTour" Grid.Column="0" Grid.Row="0" Click="btn_CreateTour_Click" Command="{Binding OpenCreateWindow}">Create Tour</Button>
         <Button x:Name="btn_DeleteTour" Grid.Column="1" Grid.Row="0" Command="{Binding DeleteTourCommand}">Delete Tour</Button>
-        
+
         <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="4" ItemsSource="{Binding Tours}" SelectedItem="{Binding SelectedTour}">
             <ListView.View>
                 <GridView>
