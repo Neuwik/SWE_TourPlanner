@@ -18,11 +18,11 @@ namespace SWE_TourPlanner_Unittests
             var viewModel = new ViewModel();
             var initialCount = viewModel.Tours.Count;
 
-            viewModel.TempTour = new Tour {};
+            viewModel.SelectedTour = new Tour {};
             viewModel.AddTour();
 
             ClassicAssert.AreEqual(initialCount + 1, viewModel.Tours.Count);
-            ClassicAssert.IsNotNull(viewModel.TempTour);
+            ClassicAssert.IsNotNull(viewModel.SelectedTour);
         }
 
         [Test]
