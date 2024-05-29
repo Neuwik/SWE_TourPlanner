@@ -11,6 +11,7 @@ namespace SWE_TourPlanner_WPF
 {
     public class Tour
     {
+        // @Kini Tour ID wär praktisch
         public string Name { get; set; }
         public string Description { get; set; }
         public string From { get; set; }

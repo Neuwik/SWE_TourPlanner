@@ -9,6 +9,7 @@ namespace SWE_TourPlanner_WPF
 {
     public class TourLog
     {
+        // @Kini Tour ID wär praktisch
         public DateTime DateTime { get; set; }
         public string Comment { get; set; }
         public EDifficulty Difficulty { get; set; }
