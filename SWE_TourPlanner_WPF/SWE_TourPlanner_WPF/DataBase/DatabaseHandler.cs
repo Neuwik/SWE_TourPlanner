@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Data.Sql;
 using System.DirectoryServices;
 using System.Diagnostics;
+using System.Net;
 
 namespace SWE_TourPlanner_WPF.DataBase
 {
@@ -20,13 +21,13 @@ namespace SWE_TourPlanner_WPF.DataBase
         private SqlDataAdapter _SqlDataAdapter;
         private SqlCommand _Command;
 
-
         public DatabaseHandler()
         {
             lock (_DATABASELOCK)
             {
                 _DatabaseConnection = new SqlConnection(_ConnectionString);
             }
+            SeedData();
         }
         private string ExecuteSQLQuery(string sqlCommand, Dictionary<string, string> queryParameterD)
         {
@@ -79,48 +80,178 @@ namespace SWE_TourPlanner_WPF.DataBase
         // WRITE Functions:
         public string AddTour(Tour tour)
         {
-            Dictionary<string, string> queryParameterD = new Dictionary<string, string>();
-            ExecuteSQLQuery("", queryParameterD);
+            ConvertTourToParams(tour, out Dictionary<string, string> queryParameterD);
+            ExecuteSQLQuery(
+                @"INSERT INTO [dbo].[Tour] (
+                    [Name],
+                    [Description],
+                    [FromLocation],
+                    [ToLocation],
+                    [TransportType],
+                    [Distance],
+                    [Time],
+                    [RouteInformation],
+                    [ImagePath]
+                  ) VALUES (
+                    @Name,
+                    @Description,
+                    @FromLocation,
+                    @ToLocation,
+                    @TransportType,
+                    @Distance,
+                    @Time,
+                    @RouteInformation,
+                    @ImagePath
+                  );", 
+                queryParameterD
+            );
+
+            if(tour.TourLogs.Count > 0)
+            {
+                foreach (TourLog tourLog in tour.TourLogs)
+                {
+                    AddTourLog(tourLog);
+                }
+            }
+            
             return "";
         }
+
         public string AddTourLog(TourLog tourLog)
         {
-            Dictionary<string, string> queryParameterD = new Dictionary<string, string>();
-            ExecuteSQLQuery("", queryParameterD);
+            ConvertTourLogParamsD(tourLog, out Dictionary<string, string> queryParameterD);
+            ExecuteSQLQuery(
+                @"INSERT INTO [dbo].[TourLog] (
+                    [TourId],
+                    [DateTime],
+                    [Comment],
+                    [Difficulty],
+                    [TotalDistance],
+                    [TotalTime],
+                    [Rating]
+                  ) VALUES (
+                    @TourId,
+                    @DateTime,
+                    @Comment,
+                    @Difficulty,
+                    @TotalDistance,
+                    @TotalTime,
+                    @Rating
+                  );", 
+                queryParameterD
+            );
             return "";
         }
 
-        // ALTER functions:
-        public string AlterTour(Tour tour)
+        // UPDATE functions:
+        public string UpdateTour(Tour tour)
         {
-            Dictionary<string, string> queryParameterD = new Dictionary<string, string>();
-            ExecuteSQLQuery("", queryParameterD);
+            ConvertTourToParams(tour, out Dictionary<string, string> queryParameterD);
+            ExecuteSQLQuery(
+                @"UPDATE [dbo].[Tour] 
+                  SET 
+                    [Name] = @Name, 
+                    [Description] = @Description, 
+                    [FromLocation] = @FromLocation, 
+                    [ToLocation] = @ToLocation, 
+                    [TransportType] = @TransportType, 
+                    [Distance] = @Distance,
+                    [Time] = @Time,   
+                    [RouteInformation] = @RouteInformation,
+                    [ImagePath] = @ImagePath
+                  WHERE 
+                    [TourId] = @TourId;", 
+                queryParameterD
+            );
             return "";
         }
 
-        public string AlterTourLog(TourLog tourLog)
+        public string UpdateTourLog(TourLog tourLog)
         {
-            Dictionary<string, string> queryParameterD = new Dictionary<string, string>();
-            ExecuteSQLQuery("", queryParameterD);
+            ConvertTourLogParamsD(tourLog, out Dictionary<string, string> queryParameterD);
+            ExecuteSQLQuery(
+                @"UPDATE [dbo].[TourLog]
+                  SET 
+                    [TourId] = @TourId,
+                    [DateTime] = @DateTime,
+                    [Comment] = @Comment,
+                    [Difficulty] = @Difficulty,
+                    [TotalDistance] = @TotalDistance,
+                    [TotalTime] = @TotalTime,
+                    [Rating] = @Rating
+                  WHERE 
+                    [TourLogId] = @TourLogId;", 
+                queryParameterD
+            );
             return "";
         }
 
         // DELETE Functions:
-        public bool DeleteTour(int TourId)
+        public bool DeleteTour(Tour tour)
         {
-            string idAsString = TourId.ToString();
-            Dictionary<string, string> queryParameterD = new Dictionary<string, string>();
-            queryParameterD.Add("TourId", idAsString);
-            ExecuteSQLQuery("", queryParameterD);
+            ConvertTourToParams(tour, out Dictionary<string, string> queryParameterD);
+            ExecuteSQLQuery(
+                @"DELETE FROM [dbo].[Tour] 
+                  WHERE [TourId] = @TourId;", 
+                queryParameterD
+            );
             return true;
         }
-        public bool DeleteTourLog(int TourLogId)
+        public bool DeleteTourLog(TourLog tourLog)
         {
-            string idAsString = TourLogId.ToString();
-            Dictionary<string, string> queryParameterD = new Dictionary<string, string>();
-            queryParameterD.Add("TourLogId", idAsString);
-            ExecuteSQLQuery("", queryParameterD);
+            ConvertTourLogParamsD(tourLog, out Dictionary<string, string> queryParameterD);
+            ExecuteSQLQuery(
+                @"DELETE FROM [dbo].[TourLog] 
+                  WHERE [TourLogId] = @TourId;", 
+                queryParameterD
+            );
             return true;
+        }
+
+        // HELPER Functions:
+        private void ConvertTourToParams(Tour tour, out Dictionary<string, string> queryParameterD)
+        {
+            queryParameterD = new Dictionary<string, string>();
+            queryParameterD.Add("TourId", /*tourID*/"");
+            queryParameterD.Add("Name", tour.Name);
+            queryParameterD.Add("Description", tour.Description);
+            queryParameterD.Add("FromLocation", tour.From);
+            queryParameterD.Add("ToLocation", tour.To);
+            queryParameterD.Add("TransportType", "" + (int) tour.TransportType);
+            queryParameterD.Add("Distance", "" + tour.Distance);
+            queryParameterD.Add("Time", "" + tour.Time);
+            queryParameterD.Add("RouteInformation", tour.RouteInformation);
+            queryParameterD.Add("ImagePath", tour.ImagePath);
+        }
+        private void ConvertTourLogParamsD(TourLog tourLog, out Dictionary<string, string> queryParameterD)
+        {
+            queryParameterD = new Dictionary<string, string>();
+            queryParameterD.Add("TourLogId", /*tourLog.Name*/ "");
+            queryParameterD.Add("TourId", /*tourID*/"");
+            queryParameterD.Add("DateTime", tourLog.DateTime.ToString());
+            queryParameterD.Add("Comment", tourLog.Comment);
+            queryParameterD.Add("Difficulty", "" + (int) tourLog.Difficulty);
+            queryParameterD.Add("TotalDistance", "" + tourLog.TotalDistance);
+            queryParameterD.Add("TotalTime", "" + tourLog.TotalTime);
+            queryParameterD.Add("Rating", "" + (int) tourLog.Rating);
+        }
+        private void SeedData()
+        {
+            for (int i = 1; i < 6; i++)
+            {
+                Tour selectedTour = new Tour()
+                {
+                    Name = $"Name {i}",
+                    Description = $"Desc {i}",
+                    From = $"From {i}",
+                    To = $"To {i}",
+                    TransportType = ETransportType.Car,
+                    Distance = i * 100,
+                    Time = i * 30,
+                    RouteInformation = $"Info {i}"
+                };
+                AddTour(selectedTour);
+            }
         }
     }
 }
