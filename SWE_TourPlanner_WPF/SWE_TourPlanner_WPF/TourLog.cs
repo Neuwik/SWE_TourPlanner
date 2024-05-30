@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using System.Xml.Linq;
 
 namespace SWE_TourPlanner_WPF
 {
+    [Table("TourLogs")]
     public class TourLog
     {
         [Key]
         public int Id { get; set; }
         public int TourId { get; set; }
+        public Tour Tour { get; set; } = null!;
         public DateTime DateTime { get; set; }
         public string Comment { get; set; }
         public EDifficulty Difficulty { get; set; }
@@ -41,6 +46,15 @@ namespace SWE_TourPlanner_WPF
         }
 
         public TourLog(TourLog other)
+        {
+            DateTime = other.DateTime;
+            Comment = other.Comment;
+            Difficulty = other.Difficulty;
+            TotalDistance = other.TotalDistance;
+            TotalTime = other.TotalTime;
+            Rating = other.Rating;
+        }
+        public void Update(TourLog other)
         {
             DateTime = other.DateTime;
             Comment = other.Comment;

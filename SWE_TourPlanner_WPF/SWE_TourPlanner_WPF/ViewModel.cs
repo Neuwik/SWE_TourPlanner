@@ -175,7 +175,7 @@ namespace SWE_TourPlanner_WPF
 
                 if (SelectedTour != null)
                 {
-                    SelectedTour.TourLogs = IBusinessLayer.Instance.GetAllToursLogOfTour(SelectedTour);
+                    //SelectedTour.TourLogs = IBusinessLayer.Instance.GetAllToursLogOfTour(SelectedTour);
                 }
             }
             catch (Exception e)
