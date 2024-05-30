@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SWE_TourPlanner_WPF.BusinessLayer;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace SWE_TourPlanner_WPF
@@ -63,10 +65,29 @@ namespace SWE_TourPlanner_WPF
             }
         }
 
+        private ICommandHandler _updateTourCommand;
+        public ICommandHandler UpdateTourCommand
+        {
+            get
+            {
+                return _updateTourCommand ?? (_updateTourCommand = new ICommandHandler(() => UpdateTour(), () => IsTourSelected));
+            }
+        }
+
+        private ICommandHandler _reloadToursCommand;
+        public ICommandHandler ReloadToursCommand
+        {
+            get
+            {
+                return _reloadToursCommand ?? (_reloadToursCommand = new ICommandHandler(() => ReloadTours(), () => true));
+            }
+        }
+
         public ViewModel() 
         {
             Tours = new ObservableCollection<Tour> { };
-            SeedData();
+            //SeedData();
+            ReloadTours();
         }
 
         public bool SelectedTourIsNotEmpty()
@@ -81,21 +102,89 @@ namespace SWE_TourPlanner_WPF
 
         public void AddTour()
         {
+            //Needs to be in Business Layer
             SelectedTour.ImagePath = "/route.png";
-            Tours.Add(SelectedTour);
-            OnPropertyChanged(nameof(Tours));
-            OnPropertyChanged(nameof(SelectedTour));
-            OnPropertyChanged(nameof(IsTourSelected));
+
+            try
+            {
+                SelectedTour = IBusinessLayer.Instance.AddTour(SelectedTour);
+                Tours.Add(SelectedTour);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            finally
+            {
+                OnPropertyChanged(nameof(Tours));
+            }
+        }
+
+        public void UpdateTour()
+        {
+            try
+            {
+                SelectedTour = IBusinessLayer.Instance.UpdateTour(SelectedTour);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            finally
+            {
+                OnPropertyChanged(nameof(Tours));
+            }
         }
 
         public void DeleteTour()
         {
             if (SelectedTour != null)
             {
-                Tours.Remove(SelectedTour);
-                OnPropertyChanged(nameof(Tours));
+                try
+                {
+                    SelectedTour = IBusinessLayer.Instance.RemoveTour(SelectedTour);
+                    Tours.Remove(SelectedTour);
+                    SelectedTour = null;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
+                finally
+                {
+                    OnPropertyChanged(nameof(Tours));
+                }
+            }
+        }
 
-                SelectedTour = null;
+        public void ReloadTours()
+        {
+            try
+            {
+                Tours = new ObservableCollection<Tour>(IBusinessLayer.Instance.GetAllTours());
+
+                if (SelectedTour != null)
+                {
+                    SelectedTour = Tours.ToList().Find(t => t == SelectedTour);
+                }
+
+                if (SelectedTour == null)
+                {
+                    SelectedTour = Tours.FirstOrDefault();
+                }
+
+                if (SelectedTour != null)
+                {
+                    SelectedTour.TourLogs = IBusinessLayer.Instance.GetAllToursLogOfTour(SelectedTour);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            finally
+            {
+                OnPropertyChanged(nameof(Tours));
             }
         }
 

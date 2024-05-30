@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -11,7 +12,8 @@ namespace SWE_TourPlanner_WPF
 {
     public class Tour
     {
-        // @Kini Tour ID wär praktisch
+        [Key]
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string From { get; set; }
@@ -21,6 +23,7 @@ namespace SWE_TourPlanner_WPF
         public int Time { get; set; }
         public string RouteInformation { get; set; }
         public string ImagePath { get; set; }
+        public string OSMjson { get; set; }
         public List<TourLog> TourLogs { get; set; } = new List<TourLog>();
 
 

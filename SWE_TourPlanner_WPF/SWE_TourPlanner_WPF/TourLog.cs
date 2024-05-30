@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,9 @@ namespace SWE_TourPlanner_WPF
 {
     public class TourLog
     {
-        // @Kini Tour ID wär praktisch
+        [Key]
+        public int Id { get; set; }
+        public int TourId { get; set; }
         public DateTime DateTime { get; set; }
         public string Comment { get; set; }
         public EDifficulty Difficulty { get; set; }
