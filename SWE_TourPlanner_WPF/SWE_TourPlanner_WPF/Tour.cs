@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
+using System.Xml.Linq;
 
 namespace SWE_TourPlanner_WPF
 {
+    [Table("Tours")]
     public class Tour
     {
         [Key]
@@ -24,7 +29,7 @@ namespace SWE_TourPlanner_WPF
         public double Time { get; set; }
         public string RouteInformation { get; set; }
         public string OSMjson { get; set; }
-        public List<TourLog> TourLogs { get; set; } = new List<TourLog>();
+        public ICollection<TourLog> TourLogs { get; } = new List<TourLog>();
         public string DistanceString
         {
             get
@@ -84,6 +89,18 @@ namespace SWE_TourPlanner_WPF
             {
                 TourLogs.Add(new TourLog(tourLog));
             }
+        }
+        public void Update(Tour newTour)
+        {
+            Name = newTour.Name;
+            Description = newTour.Description;
+            From = newTour.From;
+            To = newTour.To;
+            TransportType = newTour.TransportType;
+            Distance = newTour.Distance;
+            Time = newTour.Time;
+            RouteInformation = newTour.RouteInformation;
+            ImagePath = newTour.ImagePath;
         }
 
         public bool AreAllInputParamsSet()

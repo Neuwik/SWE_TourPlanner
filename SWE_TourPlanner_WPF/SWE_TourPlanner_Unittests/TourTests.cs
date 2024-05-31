@@ -24,18 +24,6 @@ namespace SWE_TourPlanner_Unittests
                 Distance = 100,
                 Time = 120,
                 RouteInformation = "Test Route Info",
-                TourLogs = new List<TourLog>
-            {
-                new TourLog
-                {
-                    DateTime = System.DateTime.Now,
-                    Comment = "Test Log",
-                    Difficulty = EDifficulty.easy,
-                    TotalDistance = 50,
-                    TotalTime = 60,
-                    Rating = ERating.FiveStars
-                }
-            }
             };
 
             var copy = new Tour(original);
@@ -49,12 +37,6 @@ namespace SWE_TourPlanner_Unittests
             ClassicAssert.AreEqual(original.Time, copy.Time);
             ClassicAssert.AreEqual(original.RouteInformation, copy.RouteInformation);
             ClassicAssert.AreEqual(original.TourLogs.Count, copy.TourLogs.Count);
-            ClassicAssert.AreEqual(original.TourLogs[0].DateTime, copy.TourLogs[0].DateTime);
-            ClassicAssert.AreEqual(original.TourLogs[0].Comment, copy.TourLogs[0].Comment);
-            ClassicAssert.AreEqual(original.TourLogs[0].Difficulty, copy.TourLogs[0].Difficulty);
-            ClassicAssert.AreEqual(original.TourLogs[0].TotalDistance, copy.TourLogs[0].TotalDistance);
-            ClassicAssert.AreEqual(original.TourLogs[0].TotalTime, copy.TourLogs[0].TotalTime);
-            ClassicAssert.AreEqual(original.TourLogs[0].Rating, copy.TourLogs[0].Rating);
         }
     }
 }

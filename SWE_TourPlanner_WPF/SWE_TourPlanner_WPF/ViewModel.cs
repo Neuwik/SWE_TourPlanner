@@ -190,6 +190,7 @@ namespace SWE_TourPlanner_WPF
                 {
                     tour.TourLogs = IBusinessLayer.Instance.GetAllTourLogsOfTour(tour);
                 }
+                
                 SelectedTour = tour;
             }
             catch (Exception e)
