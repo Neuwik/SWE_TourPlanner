@@ -29,6 +29,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             //throw new BLLNotImplementedException("Add Tour Log");
 
             // Check if Tour exists
+            log.Id = Mock_GetNextTourLogId();
             mock_selected_tour = GetExistingTour(log.TourId);
             mock_selected_tour.TourLogs.Add(log);
             mock_logs.Add(log);
@@ -86,8 +87,11 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
         {
             // check if tour exists
             // check what changed
-            //
             throw new BLLNotImplementedException("Update Tour");
+            foreach (TourLog log in tour.TourLogs)
+            {
+
+            }
         }
 
         public TourLog UpdateTourLog(TourLog log)
@@ -149,8 +153,8 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 {
                     Name = $"Name {i}",
                     Description = $"Desc {i}",
-                    From = $"From {i}",
-                    To = $"To {i}",
+                    From = $"HTL Krems",
+                    To = $"FH-Technikum Wien",
                     TransportType = ETransportType.Car,
                     Distance = i * 100,
                     Time = i * 30,

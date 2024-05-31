@@ -45,6 +45,7 @@ namespace SWE_TourPlanner_WPF
 
         public Tour(Tour other)
         {
+            Id = other.Id;
             Name = other.Name;
             Description = other.Description;
             From = other.From;

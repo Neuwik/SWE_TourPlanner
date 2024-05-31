@@ -1,8 +1,12 @@
-﻿using SWE_TourPlanner_WPF.BusinessLayer;
+﻿using Microsoft.Web.WebView2.WinForms;
+using Newtonsoft.Json;
+using SWE_TourPlanner_WPF.BusinessLayer;
+using SWE_TourPlanner_WPF.MapHelpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -14,6 +18,13 @@ namespace SWE_TourPlanner_WPF
 {
     public class ViewModel : INotifyPropertyChanged
     {
+        private const string ApiKey = "5b3ce3597851110001cf62483a397f95f86441adb7cbf0789ae0d615";
+        public const string DirectionsFilePath = "Resources/directions.js";
+        public const string LeafletFilePath = "Resources/leaflet.html";
+
+        public delegate Task UpdateMapDelegate();
+        public UpdateMapDelegate UpdateMap { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<Tour> Tours { get; set; }
@@ -27,6 +38,12 @@ namespace SWE_TourPlanner_WPF
                 if (_selectedTour != value)
                 {
                     _selectedTour = value;
+
+                    if (_selectedTour != null)
+                    {
+                        GetRoute();
+                    }
+
                     OnPropertyChanged(nameof(SelectedTour));
                     OnPropertyChanged(nameof(IsTourSelected));
                 }
@@ -188,31 +205,54 @@ namespace SWE_TourPlanner_WPF
             }
         }
 
+        private async void GetRoute()
+        {
+            Tour currentTour = new Tour(SelectedTour);
+            if (currentTour != null && !String.IsNullOrEmpty(currentTour.From) && !String.IsNullOrEmpty(currentTour.To))
+            {
+                var json = await new OpenRouteService(ApiKey).GetDirectionsAsync(currentTour.From, currentTour.To, currentTour.TransportType);
+
+                try
+                {
+                    var directionsContent = $"var directions = {json};";
+                    string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                    string filePath = System.IO.Path.Combine(appDir, DirectionsFilePath);
+                    File.WriteAllText(filePath, directionsContent);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
+
+                var directionsResult = JsonConvert.DeserializeObject<DirectionsResult>(json);
+                if (directionsResult != null && directionsResult.Features != null && directionsResult.Features.Count > 0)
+                {
+                    // Access the first feature
+                    var firstFeature = directionsResult.Features[0];
+
+                    // Access the geometry coordinates
+                    var coordinates = firstFeature.Geometry.Coordinates;
+
+                    var summary = firstFeature.Properties.Summary;
+                    // Format the message
+                    string message = $"Distance: {summary.Distance} meters\nDuration: {summary.Duration} seconds";
+                    // Show the message box
+                    if (currentTour.Id == SelectedTour.Id && UpdateMap != null)
+                    {
+                        MessageBox.Show(message);
+                        await UpdateMap();
+                    }
+
+                    // Construct the URL for the map tiles
+                    /*MapImageUrl = await ConstructMapUrl(SelectedTour.From, SelectedTour.To);
+                    SelectedTour.Img = MapImageUrl;*/
+                }
+            }
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        private void SeedData()
-        {
-            for (int i = 1; i < 6; i++)
-            {
-                SelectedTour = new Tour()
-                {
-                    Name = $"Name {i}",
-                    Description = $"Desc {i}",
-                    From = $"From {i}",
-                    To = $"To {i}",
-                    TransportType = ETransportType.Car,
-                    Distance = i * 100,
-                    Time = i * 30,
-                    RouteInformation = $"Info {i}"
-                };
-                AddTour();
-            }
-
-            SelectedTour = null;
-            OnPropertyChanged(nameof(SelectedTour));
-            OnPropertyChanged(nameof(Tours));
         }
     }
 }

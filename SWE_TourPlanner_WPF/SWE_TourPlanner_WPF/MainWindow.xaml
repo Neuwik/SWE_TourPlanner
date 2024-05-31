@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         xmlns:local="clr-namespace:SWE_TourPlanner_WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -54,6 +55,9 @@
                         </Binding>
                     </Image.Source>
                 </Image>
+            </TabItem>
+            <TabItem Header="OSM">
+                <wpf:WebView2 x:Name="webView" Source="about:blank"/>
             </TabItem>
             <TabItem Header="Misc">
                 <TextBox TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="{Binding SelectedTour.RouteInformation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
