@@ -100,7 +100,7 @@ namespace SWE_TourPlanner_WPF
             Distance = newTour.Distance;
             Time = newTour.Time;
             RouteInformation = newTour.RouteInformation;
-            ImagePath = newTour.ImagePath;
+            OSMjson = newTour.OSMjson;
         }
 
         public bool AreAllInputParamsSet()

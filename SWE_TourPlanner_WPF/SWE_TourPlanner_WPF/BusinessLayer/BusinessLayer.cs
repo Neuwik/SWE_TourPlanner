@@ -269,10 +269,8 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 IBusinessLayer.logger.Debug($"Trying to update TourLog {log}.");
                 //throw new BLLNotImplementedException("Update Tour Log");
 
-                mock_selected_tour = GetExistingTour(log.TourId);
-
-                mock_logs.Add(log);
-                mock_selected_tour.TourLogs.Add(log);
+                TourLog tLog = GetExistingTourLog(log.Id);
+                tLog.Update(log);
 
                 IBusinessLayer.logger.Debug($"Updated TourLog {log}.");
                 return log;

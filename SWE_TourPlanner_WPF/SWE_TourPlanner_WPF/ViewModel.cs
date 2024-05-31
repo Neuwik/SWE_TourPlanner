@@ -186,10 +186,13 @@ namespace SWE_TourPlanner_WPF
                     tour = Tours.FirstOrDefault();
                 }
 
+                /*
+                 * Loaded anyways
                 if (tour != null)
                 {
                     tour.TourLogs = IBusinessLayer.Instance.GetAllTourLogsOfTour(tour);
                 }
+                */
                 
                 SelectedTour = tour;
             }
