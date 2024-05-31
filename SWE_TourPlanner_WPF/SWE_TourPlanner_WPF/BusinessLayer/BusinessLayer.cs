@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SWE_TourPlanner_WPF.BusinessLayer.MapHelpers;
+using SWE_TourPlanner_WPF.DataBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
         private List<Tour> mock_tours = new List<Tour>();
         private List<TourLog> mock_logs = new List<TourLog>();
         private Tour mock_selected_tour;
+        private DatabaseHandler _DatabaseHandler = new DatabaseHandler();
 
         public async Task<Tour> AddTour(Tour tour)
         {
@@ -35,8 +37,11 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 await CalculateRoute(newTour);
 
                 //Add Tour to DB -> here only Mock
-                newTour.Id = Mock_GetNextTourId();
-                mock_tours.Add(newTour);
+                /*newTour.Id = Mock_GetNextTourId();
+                mock_tours.Add(newTour);*/
+
+                _DatabaseHandler.AddTour(newTour);
+
 
                 IBusinessLayer.logger.Debug($"Tour {newTour} was added.");
 
