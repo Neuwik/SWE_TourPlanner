@@ -1,11 +1,10 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SWE_TourPlanner_WPF", "SWE_TourPlanner_WPF\SWE_TourPlanner_WPF.csproj", "{65ADDB1E-747C-4E28-B1EC-070D199A931E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SWE_TourPlanner_Unittests", "SWE_TourPlanner_Unittests\SWE_TourPlanner_Unittests.csproj", "{958B1078-B4C5-43F4-9972-82524D4DE313}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SWE_TourPlanner_Unittests", "SWE_TourPlanner_Unittests\SWE_TourPlanner_Unittests.csproj", "{B82AC125-F06A-4E5B-B6C6-626F6959D77C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +16,10 @@ Global
 		{65ADDB1E-747C-4E28-B1EC-070D199A931E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65ADDB1E-747C-4E28-B1EC-070D199A931E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65ADDB1E-747C-4E28-B1EC-070D199A931E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{958B1078-B4C5-43F4-9972-82524D4DE313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{958B1078-B4C5-43F4-9972-82524D4DE313}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{958B1078-B4C5-43F4-9972-82524D4DE313}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{958B1078-B4C5-43F4-9972-82524D4DE313}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B82AC125-F06A-4E5B-B6C6-626F6959D77C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B82AC125-F06A-4E5B-B6C6-626F6959D77C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B82AC125-F06A-4E5B-B6C6-626F6959D77C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B82AC125-F06A-4E5B-B6C6-626F6959D77C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
