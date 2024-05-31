@@ -1,4 +1,6 @@
-﻿using System;
+﻿using log4net;
+using SWE_TourPlanner_WPF.BusinessLayer.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,8 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
 {
     public interface IBusinessLayer
     {
+        protected static readonly ILoggerWrapper logger = LoggerFactory.GetLogger();
+
         protected const string ApiKey = "5b3ce3597851110001cf62483a397f95f86441adb7cbf0789ae0d615";
 
         protected static IBusinessLayer? _instance;

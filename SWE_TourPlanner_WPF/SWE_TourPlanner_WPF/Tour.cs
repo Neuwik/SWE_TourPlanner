@@ -111,5 +111,10 @@ namespace SWE_TourPlanner_WPF
 
             return true;
         }
+
+        public override string ToString()
+        {
+            return $"Tour Id: {Id}, Name: {Name}, Description: {Description}, From: {From}, To: {To}, Transport Type: {TransportType}, Distance: {DistanceString}, Time: {TimeString}, Tour Logs Count: {TourLogs.Count}";
+        }
     }
 }

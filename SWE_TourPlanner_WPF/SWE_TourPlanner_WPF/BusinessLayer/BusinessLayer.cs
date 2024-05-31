@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using log4net;
+using log4net.Repository.Hierarchy;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SWE_TourPlanner_WPF.BusinessLayer.MapHelpers;
 using System;
@@ -18,166 +21,322 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
 
         public async Task<Tour> AddTour(Tour tour)
         {
-            //throw new BLLNotImplementedException("Add Tour");
+            try
+            {
+                IBusinessLayer.logger.Debug($"Trying to add Tour {tour}.");
 
-            //Make a new Tour with incoming Information
-            Tour newTour = new Tour(tour);
+                //throw new BLLNotImplementedException("Add Tour");
+
+                //Make a new Tour with incoming Information
+                Tour newTour = new Tour(tour);
 
 
-            //Calculate Route
-            await CalculateRoute(newTour);
+                //Calculate Route
+                await CalculateRoute(newTour);
 
-            //Add Tour to DB -> here only Mock
-            newTour.Id = Mock_GetNextTourId();
-            mock_tours.Add(newTour);
+                //Add Tour to DB -> here only Mock
+                newTour.Id = Mock_GetNextTourId();
+                mock_tours.Add(newTour);
 
-            //Return Copy of added Tour
-            return new Tour(newTour);
+                IBusinessLayer.logger.Debug($"Tour {newTour} was added.");
+
+                //Return Copy of added Tour
+                return new Tour(newTour);
+            }
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Adding Tour {tour} failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Adding Tour {tour} failed: {e.Message}");
+                throw;
+            }
         }
 
         public TourLog AddTourLogToTour(Tour tour, TourLog log)
         {
-            //throw new BLLNotImplementedException("Add Tour Log");
+            try
+            {
+                IBusinessLayer.logger.Debug($"Trying to add TourLog {log} to Tour {tour}.");
+                //throw new BLLNotImplementedException("Add Tour Log");
 
-            //Make a new TourLog with incoming Information
-            TourLog newLog = new TourLog(log);
+                //Make a new TourLog with incoming Information
+                TourLog newLog = new TourLog(log);
 
-            // Check if Tour exists
-            mock_selected_tour = GetExistingTour(tour.Id);
+                // Check if Tour exists
+                mock_selected_tour = GetExistingTour(tour.Id);
 
-            //Set Tour Id
-            newLog.TourId = tour.Id;
+                //Set Tour Id
+                newLog.TourId = tour.Id;
 
-            //Add TourLog to DB -> here only Mock
-            newLog.Id = Mock_GetNextTourLogId();
-            mock_selected_tour.TourLogs.Add(newLog);
-            mock_logs.Add(newLog);
+                //Add TourLog to DB -> here only Mock
+                newLog.Id = Mock_GetNextTourLogId();
+                mock_selected_tour.TourLogs.Add(newLog);
+                mock_logs.Add(newLog);
 
-            //Return Copy of added TourLog
-            return new TourLog(newLog);
+                IBusinessLayer.logger.Debug($"TourLog {newLog} was added to Tour {mock_selected_tour}.");
+                //Return Copy of added TourLog
+                return new TourLog(newLog);
+            }
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Adding TourLog {log} to Tour {tour} failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Adding TourLog {log} to Tour {tour} failed: {e.Message}");
+                throw;
+            }
         }
 
         public async Task<List<Tour>> GetAllTours()
         {
-            //throw new BLLNotImplementedException("Get All Tours");
-
-            // currently only seed data
-            if (mock_tours == null || mock_tours.Count <= 0)
+            try
             {
-                await Mock_TestTours();
+                IBusinessLayer.logger.Debug($"Trying to get all Tours.");
+                //throw new BLLNotImplementedException("Get All Tours");
+
+                // currently only seed data
+                if (mock_tours == null || mock_tours.Count <= 0)
+                {
+                    await Mock_TestTours();
+                }
+
+                // Return List of Copies
+                List<Tour> tours = new List<Tour>();
+
+                foreach (Tour t in mock_tours)
+                {
+                    tours.Add(new Tour(t));
+                }
+
+                IBusinessLayer.logger.Debug($"Got all Tours.");
+                return tours;
             }
-
-            // Return List of Copies
-            List<Tour> tours = new List<Tour>();
-
-            foreach (Tour t in mock_tours)
+            catch (BusinessLayerException e)
             {
-                tours.Add(new Tour(t));
+                IBusinessLayer.logger.Error($"Getting all Tours failed: {e}");
+                throw;
             }
-
-            return tours;
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Getting all Tours failed: {e.Message}");
+                throw;
+            }
         }
 
         public List<TourLog> GetAllTourLogsOfTour(Tour tour)
         {
-            //throw new BLLNotImplementedException("Get All Tours Log Of Tour");
-
-            // check if tour exists
-            // get all logs
-            mock_selected_tour = GetExistingTour(tour.Id);
-
-            // Return List of Copies
-            List<TourLog> logs = new List<TourLog>();
-
-            foreach (TourLog l in mock_selected_tour.TourLogs)
+            try
             {
-                logs.Add(new TourLog(l));
-            }
+                IBusinessLayer.logger.Debug($"Trying to get all TourLogs from Tour {tour}.");
+                //throw new BLLNotImplementedException("Get All Tours Log Of Tour");
 
-            return logs;
+                // check if tour exists
+                // get all logs
+                mock_selected_tour = GetExistingTour(tour.Id);
+
+                // Return List of Copies
+                List<TourLog> logs = new List<TourLog>();
+
+                foreach (TourLog l in mock_selected_tour.TourLogs)
+                {
+                    logs.Add(new TourLog(l));
+                }
+
+                IBusinessLayer.logger.Debug($"Got all TourLogs from Tour {tour}.");
+                return logs;
+            }
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Getting all TourLogs from Tour {tour} failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Getting all TourLogs from Tour {tour} failed: {e.Message}");
+                throw;
+            }
         }
 
         public Tour RemoveTour(Tour tour)
         {
-            //throw new BLLNotImplementedException("Remove Tour");
-            // check if tour exists
-            // remove tour
-            mock_selected_tour = GetExistingTour(tour.Id);
-            mock_tours.Remove(mock_selected_tour);
-            return mock_selected_tour;
+            try
+            {
+                IBusinessLayer.logger.Debug($"Trying to remove Tour {tour}.");
+                //throw new BLLNotImplementedException("Remove Tour");
+                // check if tour exists
+                // remove tour
+                mock_selected_tour = GetExistingTour(tour.Id);
+                mock_tours.Remove(mock_selected_tour);
+
+                IBusinessLayer.logger.Debug($"Removed Tour {tour}.");
+                return mock_selected_tour;
+            }
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Removing Tour {tour} failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Removing Tour {tour} failed: {e.Message}");
+                throw;
+            }
         }
 
         public TourLog RemoveTourLog(TourLog log)
         {
-            //throw new BLLNotImplementedException("Remove Tour Log");
-            // check if tour exists
-            // check if tour log exists
-            // remove tour log
+            try
+            {
+                IBusinessLayer.logger.Debug($"Trying to remove TourLog {log}.");
 
-            mock_logs.Remove(GetExistingTourLog(log.Id));
-            mock_selected_tour = GetExistingTour(log.TourId);
-            mock_selected_tour.TourLogs.Remove(log);
-            return log;
+                //throw new BLLNotImplementedException("Remove Tour Log");
+                // check if tour exists
+                // check if tour log exists
+                // remove tour log
+
+                mock_logs.Remove(GetExistingTourLog(log.Id));
+                mock_selected_tour = GetExistingTour(log.TourId);
+                mock_selected_tour.TourLogs.Remove(log);
+
+                IBusinessLayer.logger.Debug($"Removed TourLog {log}.");
+                return log;
+            }
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Removing TourLog {log} failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Removing TourLog {log} failed: {e.Message}");
+                throw;
+            }
         }
 
         public Tour UpdateTour(Tour tour)
         {
-            //throw new BLLNotImplementedException("Update Tour");
-            // check if tour exists
-            // check what changed
-            mock_selected_tour = GetExistingTour(tour.Id);
-            List<TourLog> temp_TourLogs = GetAllTourLogsOfTour(mock_selected_tour);
-            foreach (TourLog log in tour.TourLogs)
+            try
             {
-                TourLog temp = temp_TourLogs.Find(l => l.Id == log.Id);
-                if (temp != null)
+                IBusinessLayer.logger.Debug($"Trying to update Tour {tour}.");
+                //throw new BLLNotImplementedException("Update Tour");
+                // check if tour exists
+                // check what changed
+                mock_selected_tour = GetExistingTour(tour.Id);
+                List<TourLog> temp_TourLogs = GetAllTourLogsOfTour(mock_selected_tour);
+                foreach (TourLog log in tour.TourLogs)
                 {
-                    temp_TourLogs.Remove(temp);
-                    UpdateTourLog(log);
+                    TourLog temp = temp_TourLogs.Find(l => l.Id == log.Id);
+                    if (temp != null)
+                    {
+                        temp_TourLogs.Remove(temp);
+                        UpdateTourLog(log);
+                    }
+                    else
+                    {
+                        AddTourLogToTour(tour, log);
+                    }
                 }
-                else
-                {
-                    AddTourLogToTour(tour, log);
-                }
-            }
 
-            foreach (TourLog temp in temp_TourLogs)
+                foreach (TourLog temp in temp_TourLogs)
+                {
+                    RemoveTourLog(temp);
+                }
+
+                IBusinessLayer.logger.Debug($"Updated Tour {tour}.");
+                return tour;
+            }
+            catch (BusinessLayerException e)
             {
-                RemoveTourLog(temp);
+                IBusinessLayer.logger.Error($"Updating Tour {tour} failed: {e}");
+                throw;
             }
-
-            return tour;
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Updating Tour {tour} failed: {e.Message}");
+                throw;
+            }
         }
 
         public TourLog UpdateTourLog(TourLog log)
         {
-            //throw new BLLNotImplementedException("Update Tour Log");
+            try
+            {
+                IBusinessLayer.logger.Debug($"Trying to update TourLog {log}.");
+                //throw new BLLNotImplementedException("Update Tour Log");
 
-            mock_selected_tour = GetExistingTour(log.TourId);
-            mock_logs.Add(log);
-            mock_selected_tour.TourLogs.Add(log);
+                mock_selected_tour = GetExistingTour(log.TourId);
 
-            return log;
+                mock_logs.Add(log);
+                mock_selected_tour.TourLogs.Add(log);
+
+                IBusinessLayer.logger.Debug($"Updated TourLog {log}.");
+                return log;
+            }
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Updating TourLog {log} failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Updating TourLog {log} failed: {e.Message}");
+                throw;
+            }
         }
 
         private Tour GetExistingTour(int id)
         {
-            Tour tour = mock_tours.Find(t => t.Id == id);
-            if (tour == null)
+            try
             {
-                throw new BLLConflictException("Tour does not exist");
+                IBusinessLayer.logger.Debug($"Trying to get Tour {id}.");
+                Tour tour = mock_tours.Find(t => t.Id == id);
+                if (tour == null)
+                {
+                    throw new BLLConflictException("Tour does not exist");
+                }
+                IBusinessLayer.logger.Debug($"Got Tour {tour}.");
+                return tour;
             }
-            return tour;
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Getting Tour {id} failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Getting Tour {id} failed: {e.Message}");
+                throw;
+            }
         }
 
         private TourLog GetExistingTourLog(int id)
         {
-            TourLog log = mock_logs.Find(l => l.Id == id);
-            if (log == null)
+            try
             {
-                throw new BLLConflictException("Tour Log does not exist");
+                IBusinessLayer.logger.Debug($"Trying to get TourLog {id}.");
+                TourLog log = mock_logs.Find(l => l.Id == id);
+                if (log == null)
+                {
+                    throw new BLLConflictException("Tour Log does not exist");
+                }
+                IBusinessLayer.logger.Debug($"Got TourLog {log}.");
+                return log;
             }
-            return log;
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Getting TourLog {id} failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Getting TourLog {id} failed: {e.Message}");
+                throw;
+            }
         }
 
         private async Task CalculateRoute(Tour tour)
@@ -186,6 +345,8 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             {
                 try
                 {
+                    IBusinessLayer.logger.Debug($"Trying to calculate Route for Tour {tour}.");
+
                     var json = await new OpenRouteService(IBusinessLayer.ApiKey).GetDirectionsAsync(tour.From, tour.To, tour.TransportType);
 
                     var directionsResult = JsonConvert.DeserializeObject<DirectionsResult>(json);
@@ -201,9 +362,17 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                         tour.Time = summary.Duration;
                         tour.RouteInformation = $"Tour from {tour.From} to {tour.To} by {tour.TransportType}\n{properties.ToString()}";
                     }
+
+                    IBusinessLayer.logger.Debug($"Calculated Route for Tour {tour}.");
                 }
-                catch (Exception)
+                catch (BusinessLayerException e)
                 {
+                    IBusinessLayer.logger.Error($"Calculating Route for Tour {tour} failed: {e}");
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    IBusinessLayer.logger.Error($"Calculating Route for Tour {tour} failed: {e.Message}");
                     throw new BLLConflictException("Route could not be calculated.");
                 }
             }

@@ -92,8 +92,8 @@
         <DataGrid Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" Grid.RowSpan="2" AutoGenerateColumns="False" ItemsSource="{Binding SelectedTour.TourLogs, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTourSelected}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="DateTime" Binding="{Binding DateTime}"/>
-                <DataGridTextColumn Header="TotalDistance" Binding="{Binding TotalDistance}"/>
-                <DataGridTextColumn Header="TotalTime" Binding="{Binding TotalTime}"/>
+                <DataGridTextColumn Header="TotalDistance (in Meters)" Binding="{Binding TotalDistance}"/>
+                <DataGridTextColumn Header="TotalTime (in Seconds)" Binding="{Binding TotalTime}"/>
                 <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty}"/>
                 <DataGridTextColumn Header="Rating" Binding="{Binding Rating}"/>
                 <DataGridTextColumn Header="Comment" Binding="{Binding Comment}"/>

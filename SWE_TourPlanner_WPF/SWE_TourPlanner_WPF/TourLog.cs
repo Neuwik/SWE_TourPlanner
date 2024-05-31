@@ -16,8 +16,8 @@ namespace SWE_TourPlanner_WPF
         public DateTime DateTime { get; set; }
         public string Comment { get; set; }
         public EDifficulty Difficulty { get; set; }
-        public float TotalDistance { get; set; }
-        public float TotalTime { get; set; }
+        public double TotalDistance { get; set; }
+        public double TotalTime { get; set; }
         public ERating Rating { get; set; }
 
         public TourLog()
@@ -30,7 +30,7 @@ namespace SWE_TourPlanner_WPF
             Rating = ERating.ThreeStars;
         }
 
-        public TourLog(DateTime dateTime, string comment, EDifficulty difficulty, float totalDistance, float totalTime, ERating rating)
+        public TourLog(DateTime dateTime, string comment, EDifficulty difficulty, double totalDistance, double totalTime, ERating rating)
         {
             DateTime = dateTime;
             Comment = comment;
@@ -42,12 +42,19 @@ namespace SWE_TourPlanner_WPF
 
         public TourLog(TourLog other)
         {
+            Id = other.Id;
+            TourId = other.TourId;
             DateTime = other.DateTime;
             Comment = other.Comment;
             Difficulty = other.Difficulty;
             TotalDistance = other.TotalDistance;
             TotalTime = other.TotalTime;
             Rating = other.Rating;
+        }
+
+        public override string ToString()
+        {
+            return $"TourLog Id: {Id}, TourId: {TourId}, DateTime: {DateTime}, Comment: {Comment}, Difficulty: {Difficulty}, TotalDistance: {TotalDistance}, TotalTime: {TotalTime}, Rating: {Rating}";
         }
     }
 }
