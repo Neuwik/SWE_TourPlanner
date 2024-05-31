@@ -24,22 +24,9 @@ namespace SWE_TourPlanner_WPF.BusinessLayer.MapHelpers
 
             public override string ToString()
             {
-                string distance = $"{Math.Truncate((Summary.Distance * 10)) / 10}m";
-                if (Summary.Distance > 1000)
-                {
-                    distance = $"{Math.Truncate((Summary.Distance / 1000 * 10)) / 10}km";
-                }
+                string ret = $"Total Distance: {ToStringHelpers.DistanceInMetersToString(Summary.Distance)}";
 
-                string ret = $"Total Distance: {distance}";
-
-                TimeSpan t = TimeSpan.FromSeconds(Summary.Duration);
-
-                string duration = string.Format("{0:D2}h:{1:D2}m:{2:D2}s",
-                                t.Hours,
-                                t.Minutes,
-                                t.Seconds
-                                );
-                ret += $"\nTotal Time: {duration}";
+                ret += $"\nTotal Time: {ToStringHelpers.DurationInSecondsToString(Summary.Duration)}";
 
                 if (Segments != null)
                 {
@@ -70,22 +57,9 @@ namespace SWE_TourPlanner_WPF.BusinessLayer.MapHelpers
 
             public override string ToString()
             {
-                string distance = $"{Math.Truncate((Distance * 10)) / 10}m";
-                if (Distance > 1000)
-                {
-                    distance = $"{Math.Truncate((Distance / 1000 * 10)) / 10}km";
-                }
+                string ret = $"Distance: {ToStringHelpers.DistanceInMetersToString(Distance)}";
 
-                string ret = $"Distance: {distance}";
-
-                TimeSpan t = TimeSpan.FromSeconds(Duration);
-
-                string duration = string.Format("{0:D2}h:{1:D2}m:{2:D2}s",
-                                t.Hours,
-                                t.Minutes,
-                                t.Seconds
-                                );
-                ret += $", Time: {duration}";
+                ret += $", Time: {ToStringHelpers.DurationInSecondsToString(Duration)}";
 
                 if (Steps != null)
                 {
@@ -107,7 +81,11 @@ namespace SWE_TourPlanner_WPF.BusinessLayer.MapHelpers
 
             public override string ToString()
             {
-                return $"In {Distance}m ({Duration}min) {Instruction}";
+                string ret = $"In {ToStringHelpers.DistanceInMetersToString(Distance)}";
+
+                ret += $"({ToStringHelpers.DurationInSecondsToString(Duration)}) {Instruction}";
+
+                return ret;
             }
         }
     }

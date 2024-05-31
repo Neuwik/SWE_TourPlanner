@@ -15,6 +15,7 @@ namespace SWE_TourPlanner_WPF.DataBase
 
         protected override DbSet<Tour> Table => Context.Tours;
         public Tour GetOneEager(int id) => Table.Include(t => t.TourLogs).ToList().Find(t => id == t.Id)!;
+        public List<Tour> GetAllEager() => Table.Include(t => t.TourLogs).ToList();
         public override int Update(Tour newTour)
         {
             Tour tour = GetOne(newTour.Id);

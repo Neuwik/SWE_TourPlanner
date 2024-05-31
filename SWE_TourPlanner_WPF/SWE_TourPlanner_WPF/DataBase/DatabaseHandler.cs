@@ -10,34 +10,79 @@ using System.Diagnostics;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using System.Configuration;
+using Microsoft.Extensions.Hosting;
+using System.Windows;
 
 namespace SWE_TourPlanner_WPF.DataBase
 {
-    class DatabaseHandler
+    class DatabaseHandler : IDisposable
     {
-        private string _ConnectionString = "Host=localhost;Port=5432;Database=SWE_TourPlanner_DB;Username=SWE_TourPlanner_User;Password=Debian123!;"; 
+        private string _ConnectionString = @"Host=localhost;Port=5432;Database=SWE_TourPlanner_DB;Username=SWE_TourPlanner_User;Password=Debian123!;"; 
         private DatabaseContext _DatabaseContext;
         private TourRepository _TourRepo;
         private TourLogRepository _TourLogRepo;
-        
+        private IServiceScope _Scope;
+        private IHost _Host;
+
         public DatabaseHandler()
         {
-            //var options = new DbContextOptionsBuilder<DatabaseContext>().Options;
-            //_DatabaseContext = new DatabaseContext(options);
-            var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
-            optionsBuilder.UseNpgsql(_ConnectionString);
-            _DatabaseContext = new DatabaseContext(optionsBuilder.Options);
-            _DatabaseContext.Database.Migrate();
+            _Host = Host.CreateDefaultBuilder()
+            .ConfigureServices((context, services) =>
+            {
+                services.AddDbContext<DatabaseContext>(options =>
+                    options.UseNpgsql(_ConnectionString));
+            })
+            .Build();
+
+            _Host.Start();
+            _Scope = _Host.Services.CreateScope();
+            _DatabaseContext = _Scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+
+            if (!_DatabaseContext.Database.CanConnect())
+            {
+                if (!_DatabaseContext.Database.EnsureCreated())
+                {
+                    throw new Exception("Debug DB HI");
+                }
+                else
+                {
+                    MessageBox.Show("Debug DB Created");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Debug DB Exists");
+            }
+
+            _DatabaseContext.Database.EnsureCreated();
+
             _TourRepo = new TourRepository(_DatabaseContext);
             _TourLogRepo = new TourLogRepository(_DatabaseContext);
 
-            SeedData();
+            //SeedData();
         }
-        
+
+        public void Dispose()
+        {
+            _Scope?.Dispose();
+            _Host?.StopAsync().GetAwaiter().GetResult();
+            _Host?.Dispose();
+        }
+
         // READ Functions:
+        public List<Tour> GetAllTours()
+        {
+            return _TourRepo.GetAllEager();
+        }
         public Tour GetTour(int TourId)
         {
-            return _TourRepo.GetOne(TourId);
+            return _TourRepo.GetOneEager(TourId);
+        }
+        public TourLog GetTourLog(int TourLogId)
+        {
+            return _TourLogRepo.GetOne(TourLogId);
         }
         public List<TourLog> GetTourLogs(int TourId)
         {
@@ -47,7 +92,6 @@ namespace SWE_TourPlanner_WPF.DataBase
         // WRITE Functions:
         public int AddTour(Tour tour)
         {
-            
             if(_TourRepo.Add(tour) <= 0)
             {
                 return 0;

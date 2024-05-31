@@ -18,7 +18,19 @@ namespace SWE_TourPlanner_WPF
         public int Id { get; set; }
         public int TourId { get; set; }
         public Tour Tour { get; set; } = null!;
-        public DateTime DateTime { get; set; }
+
+        private DateTime _dateTime;
+        public DateTime DateTime
+        {
+            get
+            {
+                return _dateTime;
+            }
+            set
+            {
+                _dateTime = value.ToUniversalTime();
+            }
+        }
         public string Comment { get; set; }
         public EDifficulty Difficulty { get; set; }
         public double TotalDistance { get; set; }
@@ -29,7 +41,7 @@ namespace SWE_TourPlanner_WPF
         {
             DateTime = DateTime.Now;
             Comment = "---";
-            Difficulty = EDifficulty.medium;
+            Difficulty = EDifficulty.Medium;
             TotalDistance = 0;
             TotalTime = 0;
             Rating = ERating.ThreeStars;

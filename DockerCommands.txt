@@ -30,6 +30,13 @@ SWE_TourPlanner_DB=# \dt
  public | your_table_name2 | table | postgres
 (2 rows)
 
+SWE_TourPlanner_DB=# SELECT * FROM "Tours";
+
+SWE_TourPlanner_DB=# SELECT * FROM "TourLogs";
+
 SWE_TourPlanner_DB=# \q
 
 root@container_id:/# exit
+
+Reset DB Data:
+SWE_TourPlanner_DB=# TRUNCATE TABLE "Tours" CASCADE;

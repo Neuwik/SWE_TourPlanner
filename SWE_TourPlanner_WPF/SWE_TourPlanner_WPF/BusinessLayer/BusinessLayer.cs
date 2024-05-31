@@ -16,9 +16,6 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
 {
     public class BusinessLayer : IBusinessLayer
     {
-        private List<Tour> mock_tours = new List<Tour>();
-        private List<TourLog> mock_logs = new List<TourLog>();
-        private Tour mock_selected_tour;
         private DatabaseHandler _DatabaseHandler = new DatabaseHandler();
 
         public async Task<Tour> AddTour(Tour tour)
@@ -41,7 +38,6 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 mock_tours.Add(newTour);*/
 
                 _DatabaseHandler.AddTour(newTour);
-
 
                 IBusinessLayer.logger.Debug($"Tour {newTour} was added.");
 
@@ -71,17 +67,15 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 TourLog newLog = new TourLog(log);
 
                 // Check if Tour exists
-                mock_selected_tour = GetExistingTour(tour.Id);
+                Tour dbTour = GetExistingTour(tour.Id);
 
                 //Set Tour Id
-                newLog.TourId = tour.Id;
+                newLog.TourId = dbTour.Id;
 
-                //Add TourLog to DB -> here only Mock
-                newLog.Id = Mock_GetNextTourLogId();
-                mock_selected_tour.TourLogs.Add(newLog);
-                mock_logs.Add(newLog);
+                //Add TourLog to DB
+                _DatabaseHandler.AddTourLog(newLog);
 
-                IBusinessLayer.logger.Debug($"TourLog {newLog} was added to Tour {mock_selected_tour}.");
+                IBusinessLayer.logger.Debug($"TourLog {newLog} was added to Tour {dbTour}.");
                 //Return Copy of added TourLog
                 return new TourLog(newLog);
             }
@@ -104,16 +98,16 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 IBusinessLayer.logger.Debug($"Trying to get all Tours.");
                 //throw new BLLNotImplementedException("Get All Tours");
 
-                // currently only seed data
-                if (mock_tours == null || mock_tours.Count <= 0)
+                // Seed Data if DB Empty
+                if (_DatabaseHandler.GetAllTours().Count <= 0)
                 {
-                    await Mock_TestTours();
+                    await SeedData();
                 }
 
                 // Return List of Copies
                 List<Tour> tours = new List<Tour>();
 
-                foreach (Tour t in mock_tours)
+                foreach (Tour t in _DatabaseHandler.GetAllTours())
                 {
                     tours.Add(new Tour(t));
                 }
@@ -142,17 +136,17 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
 
                 // check if tour exists
                 // get all logs
-                mock_selected_tour = GetExistingTour(tour.Id);
+                Tour dbTour = GetExistingTour(tour.Id);
 
                 // Return List of Copies
                 List<TourLog> logs = new List<TourLog>();
 
-                foreach (TourLog l in mock_selected_tour.TourLogs)
+                foreach (TourLog l in dbTour.TourLogs)
                 {
                     logs.Add(new TourLog(l));
                 }
 
-                IBusinessLayer.logger.Debug($"Got all TourLogs from Tour {tour}.");
+                IBusinessLayer.logger.Debug($"Got all TourLogs from Tour {dbTour}.");
                 return logs;
             }
             catch (BusinessLayerException e)
@@ -175,11 +169,12 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 //throw new BLLNotImplementedException("Remove Tour");
                 // check if tour exists
                 // remove tour
-                mock_selected_tour = GetExistingTour(tour.Id);
-                mock_tours.Remove(mock_selected_tour);
+                Tour dbTour = GetExistingTour(tour.Id);
 
-                IBusinessLayer.logger.Debug($"Removed Tour {tour}.");
-                return mock_selected_tour;
+                _DatabaseHandler.DeleteTour(dbTour);
+
+                IBusinessLayer.logger.Debug($"Removed Tour {dbTour}.");
+                return new Tour(dbTour);
             }
             catch (BusinessLayerException e)
             {
@@ -204,12 +199,12 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 // check if tour log exists
                 // remove tour log
 
-                mock_logs.Remove(GetExistingTourLog(log.Id));
-                mock_selected_tour = GetExistingTour(log.TourId);
-                mock_selected_tour.TourLogs.Remove(log);
+                TourLog dbTourLog = GetExistingTourLog(log.Id);
 
-                IBusinessLayer.logger.Debug($"Removed TourLog {log}.");
-                return log;
+                _DatabaseHandler.DeleteTourLog(dbTourLog);
+
+                IBusinessLayer.logger.Debug($"Removed TourLog {dbTourLog}.");
+                return new TourLog(dbTourLog);
             }
             catch (BusinessLayerException e)
             {
@@ -229,10 +224,15 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             {
                 IBusinessLayer.logger.Debug($"Trying to update Tour {tour}.");
                 //throw new BLLNotImplementedException("Update Tour");
+
                 // check if tour exists
-                // check what changed
-                mock_selected_tour = GetExistingTour(tour.Id);
-                List<TourLog> temp_TourLogs = GetAllTourLogsOfTour(mock_selected_tour);
+                Tour dbTour = GetExistingTour(tour.Id);
+
+                _DatabaseHandler.UpdateTour(tour);
+
+                dbTour = GetExistingTour(tour.Id);
+
+                List<TourLog> temp_TourLogs = GetAllTourLogsOfTour(dbTour);
                 foreach (TourLog log in tour.TourLogs)
                 {
                     TourLog temp = temp_TourLogs.Find(l => l.Id == log.Id);
@@ -252,8 +252,8 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                     RemoveTourLog(temp);
                 }
 
-                IBusinessLayer.logger.Debug($"Updated Tour {tour}.");
-                return tour;
+                IBusinessLayer.logger.Debug($"Updated Tour {dbTour}.");
+                return new Tour(dbTour);
             }
             catch (BusinessLayerException e)
             {
@@ -274,11 +274,14 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 IBusinessLayer.logger.Debug($"Trying to update TourLog {log}.");
                 //throw new BLLNotImplementedException("Update Tour Log");
 
-                TourLog tLog = GetExistingTourLog(log.Id);
-                tLog.Update(log);
+                TourLog dbLog = GetExistingTourLog(log.Id);
 
-                IBusinessLayer.logger.Debug($"Updated TourLog {log}.");
-                return log;
+                _DatabaseHandler.UpdateTourLog(log);
+
+                dbLog = GetExistingTourLog(log.Id);
+
+                IBusinessLayer.logger.Debug($"Updated TourLog {dbLog}.");
+                return new TourLog(dbLog);
             }
             catch (BusinessLayerException e)
             {
@@ -297,13 +300,15 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             try
             {
                 IBusinessLayer.logger.Debug($"Trying to get Tour {id}.");
-                Tour tour = mock_tours.Find(t => t.Id == id);
-                if (tour == null)
+
+                Tour dbTour = _DatabaseHandler.GetTour(id);
+
+                if (dbTour == null)
                 {
                     throw new BLLConflictException("Tour does not exist");
                 }
-                IBusinessLayer.logger.Debug($"Got Tour {tour}.");
-                return tour;
+                IBusinessLayer.logger.Debug($"Got Tour {dbTour}.");
+                return dbTour;
             }
             catch (BusinessLayerException e)
             {
@@ -322,13 +327,16 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             try
             {
                 IBusinessLayer.logger.Debug($"Trying to get TourLog {id}.");
-                TourLog log = mock_logs.Find(l => l.Id == id);
-                if (log == null)
+
+                TourLog dbTourLog = _DatabaseHandler.GetTourLog(id);
+
+                if (dbTourLog == null)
                 {
                     throw new BLLConflictException("Tour Log does not exist");
                 }
-                IBusinessLayer.logger.Debug($"Got TourLog {log}.");
-                return log;
+
+                IBusinessLayer.logger.Debug($"Got TourLog {dbTourLog}.");
+                return dbTourLog;
             }
             catch (BusinessLayerException e)
             {
@@ -385,30 +393,9 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             }
         }
 
-        private int Mock_GetNextTourId()
+        private async Task SeedData()
         {
-            Tour tour = mock_tours.OrderByDescending(t => t.Id).FirstOrDefault();
-            if (tour == null)
-            {
-                return 1;
-            }
-            return tour.Id + 1;
-        }
-
-        private int Mock_GetNextTourLogId()
-        {
-            TourLog log = mock_logs.OrderByDescending(l => l.Id).FirstOrDefault();
-            if (log == null)
-            {
-                return 1;
-            }
-            return log.Id + 1;
-        }
-
-        private async Task Mock_TestTours()
-        {
-            mock_tours = new List<Tour>();
-            for (int i = 1; i < 2; i++)
+            for (int i = 1; i < 4; i++)
             {
                 Tour t = await AddTour(new Tour()
                 {
@@ -416,8 +403,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                     Description = $"Desc {i}",
                     From = $"HTL Krems",
                     To = $"FH-Technikum Wien",
-                    TransportType = ETransportType.Car,
-                    RouteInformation = $"Info {i}"
+                    TransportType = (ETransportType)((i - 1) % 3)
                 });
             }
         }

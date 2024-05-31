@@ -34,25 +34,14 @@ namespace SWE_TourPlanner_WPF
         {
             get
             {
-                string distance = $"{Math.Truncate((Distance * 10)) / 10}m";
-                if (Distance > 1000)
-                {
-                    distance = $"{Math.Truncate((Distance / 1000 * 10)) / 10}km";
-                }
-                return distance;
+                return ToStringHelpers.DistanceInMetersToString(Distance);
             }
         }
         public string TimeString
         {
             get
             {
-                TimeSpan t = TimeSpan.FromSeconds(Time);
-
-                return string.Format("{0:D2}h:{1:D2}m:{2:D2}s",
-                                t.Hours,
-                                t.Minutes,
-                                t.Seconds
-                                );
+                return ToStringHelpers.DurationInSecondsToString(Time);
             }
         }
 
