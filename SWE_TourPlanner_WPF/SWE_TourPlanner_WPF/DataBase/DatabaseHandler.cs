@@ -9,22 +9,28 @@ using System.DirectoryServices;
 using System.Diagnostics;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace SWE_TourPlanner_WPF.DataBase
 {
     class DatabaseHandler
     {
-        private static readonly string _ConnectionString = @"Data Source = (LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\GitHub\SWE_TourPlanner\SWE_TourPlanner_WPF\SWE_TourPlanner_WPF\DataBase\TourPlannerDB.mdf;Integrated Security = True";
+        private string _ConnectionString = "Host=localhost;Port=5432;Database=SWE_TourPlanner_DB;Username=SWE_TourPlanner_User;Password=Debian123!;"; 
         private DatabaseContext _DatabaseContext;
         private TourRepository _TourRepo;
         private TourLogRepository _TourLogRepo;
         
         public DatabaseHandler()
         {
-           /*var options = new DbContextOptionsBuilder<DatabaseContext>()
-                 .UseInMemoryDatabase();*/
+            //var options = new DbContextOptionsBuilder<DatabaseContext>().Options;
+            //_DatabaseContext = new DatabaseContext(options);
+            var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
+            optionsBuilder.UseNpgsql(_ConnectionString);
+            _DatabaseContext = new DatabaseContext(optionsBuilder.Options);
+            _DatabaseContext.Database.Migrate();
             _TourRepo = new TourRepository(_DatabaseContext);
             _TourLogRepo = new TourLogRepository(_DatabaseContext);
+
             SeedData();
         }
         
@@ -41,6 +47,7 @@ namespace SWE_TourPlanner_WPF.DataBase
         // WRITE Functions:
         public int AddTour(Tour tour)
         {
+            
             if(_TourRepo.Add(tour) <= 0)
             {
                 return 0;
