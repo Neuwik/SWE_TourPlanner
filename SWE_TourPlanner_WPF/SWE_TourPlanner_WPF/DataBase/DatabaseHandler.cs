@@ -221,7 +221,7 @@ namespace SWE_TourPlanner_WPF.DataBase
             queryParameterD.Add("Distance", "" + tour.Distance);
             queryParameterD.Add("Time", "" + tour.Time);
             queryParameterD.Add("RouteInformation", tour.RouteInformation);
-            queryParameterD.Add("ImagePath", tour.ImagePath);
+            //queryParameterD.Add("ImagePath", tour.ImagePath);
         }
         private void ConvertTourLogParamsD(TourLog tourLog, out Dictionary<string, string> queryParameterD)
         {

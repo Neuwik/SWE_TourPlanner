@@ -4,11 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE_TourPlanner_WPF.MapHelpers
+namespace SWE_TourPlanner_WPF.BusinessLayer.MapHelpers
 {
-    using Newtonsoft.Json;
-    using System.Collections.Generic;
-
     public class GeocodeResult
     {
         public List<GeocodeFeature> Features { get; set; }

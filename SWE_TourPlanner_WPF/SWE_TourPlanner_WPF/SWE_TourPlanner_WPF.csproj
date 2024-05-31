@@ -8,20 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="none.png" />
-    <None Remove="route.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2535.41" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="none.png" />
-    <Resource Include="route.png" />
   </ItemGroup>
 
   <ItemGroup>

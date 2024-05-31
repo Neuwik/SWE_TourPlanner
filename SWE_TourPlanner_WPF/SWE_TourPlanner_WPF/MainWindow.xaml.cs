@@ -19,7 +19,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
-using SWE_TourPlanner_WPF.MapHelpers;
 
 namespace SWE_TourPlanner_WPF
 {

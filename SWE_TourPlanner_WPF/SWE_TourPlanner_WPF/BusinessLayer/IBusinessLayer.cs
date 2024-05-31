@@ -8,6 +8,8 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
 {
     public interface IBusinessLayer
     {
+        protected const string ApiKey = "5b3ce3597851110001cf62483a397f95f86441adb7cbf0789ae0d615";
+
         protected static IBusinessLayer? _instance;
         public static IBusinessLayer Instance
         {
@@ -20,13 +22,13 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 return _instance;
             }
         }
-        public Tour AddTour(Tour tour);
+        public Task<Tour> AddTour(Tour tour);
         public Tour UpdateTour(Tour tour);
         public Tour RemoveTour(Tour tour);
-        public TourLog AddTourLog(TourLog log);
+        public TourLog AddTourLogToTour(Tour tour, TourLog log);
         public TourLog UpdateTourLog(TourLog log);
         public TourLog RemoveTourLog(TourLog log);
-        public List<Tour> GetAllTours();
-        public List<TourLog> GetAllToursLogOfTour(Tour tour);
+        public Task<List<Tour>> GetAllTours();
+        public List<TourLog> GetAllTourLogsOfTour(Tour tour);
     }
 }

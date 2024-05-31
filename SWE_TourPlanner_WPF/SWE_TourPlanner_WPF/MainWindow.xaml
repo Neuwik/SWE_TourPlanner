@@ -43,24 +43,49 @@
 
         <TabControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="2" IsEnabled="{Binding IsTourSelected}">
             <TabItem Header="General">
-                <local:TourInputFields/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <local:TourInputFields Grid.Row="0" Grid.RowSpan="2"/>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Column="0" Grid.Row="0">
+                            <TextBlock Text="Distance:"/>
+                            <TextBlock Text="{Binding SelectedTour.DistanceString}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Grid.Row="0">
+                            <TextBlock Text="Time:"/>
+                            <TextBlock Text="{Binding SelectedTour.TimeString}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Grid.Row="0">
+                            <TextBlock Text="Transport Type:"/>
+                            <TextBlock Text="{Binding SelectedTour.TransportType}"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
             </TabItem>
             <TabItem Header="Route">
-                <Image>
-                    <Image.Source>
-                        <Binding Path="SelectedTour.ImagePath" >
-                            <Binding.TargetNullValue>
-                                <ImageSource>/none.png</ImageSource>
-                            </Binding.TargetNullValue>
-                        </Binding>
-                    </Image.Source>
-                </Image>
-            </TabItem>
-            <TabItem Header="OSM">
                 <wpf:WebView2 x:Name="webView" Source="about:blank"/>
             </TabItem>
-            <TabItem Header="Misc">
+            <TabItem Header="Detailed Information">
+                <ScrollViewer>
+                    <TextBlock Text="{Binding SelectedTour.RouteInformation}"/>
+                </ScrollViewer>
+                <!--
                 <TextBox TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="{Binding SelectedTour.RouteInformation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                -->
             </TabItem>
         </TabControl>
 

@@ -8,9 +8,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using static SWE_TourPlanner_WPF.MapHelpers.CalculatedRouteResponse;
 
-namespace SWE_TourPlanner_WPF.MapHelpers
+namespace SWE_TourPlanner_WPF.BusinessLayer.MapHelpers
 {
     public class OpenRouteService
     {
@@ -61,7 +60,7 @@ namespace SWE_TourPlanner_WPF.MapHelpers
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                return null;
+                throw;
             }
         }
 
@@ -90,7 +89,7 @@ namespace SWE_TourPlanner_WPF.MapHelpers
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                return (0, 0);
+                throw;
             }
         }
     }

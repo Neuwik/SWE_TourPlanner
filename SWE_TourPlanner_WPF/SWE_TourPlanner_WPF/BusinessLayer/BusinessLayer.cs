@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Newtonsoft.Json;
+using SWE_TourPlanner_WPF.BusinessLayer.MapHelpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SWE_TourPlanner_WPF.BusinessLayer
 {
@@ -12,52 +16,85 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
         private List<TourLog> mock_logs = new List<TourLog>();
         private Tour mock_selected_tour;
 
-        public Tour AddTour(Tour tour)
+        public async Task<Tour> AddTour(Tour tour)
         {
             //throw new BLLNotImplementedException("Add Tour");
 
-            // Call Open Street View
-            // Calling DAL and try add
-            tour.Id = Mock_GetNextTourId();
-            tour.OSMjson = GetOSMjson(tour);
-            mock_tours.Add(tour);
-            return tour;
+            //Make a new Tour with incoming Information
+            Tour newTour = new Tour(tour);
+
+
+            //Calculate Route
+            await CalculateRoute(newTour);
+
+            //Add Tour to DB -> here only Mock
+            newTour.Id = Mock_GetNextTourId();
+            mock_tours.Add(newTour);
+
+            //Return Copy of added Tour
+            return new Tour(newTour);
         }
 
-        public TourLog AddTourLog(TourLog log)
+        public TourLog AddTourLogToTour(Tour tour, TourLog log)
         {
             //throw new BLLNotImplementedException("Add Tour Log");
 
-            // Check if Tour exists
-            log.Id = Mock_GetNextTourLogId();
-            mock_selected_tour = GetExistingTour(log.TourId);
-            mock_selected_tour.TourLogs.Add(log);
-            mock_logs.Add(log);
+            //Make a new TourLog with incoming Information
+            TourLog newLog = new TourLog(log);
 
-            return log;
+            // Check if Tour exists
+            mock_selected_tour = GetExistingTour(tour.Id);
+
+            //Set Tour Id
+            newLog.TourId = tour.Id;
+
+            //Add TourLog to DB -> here only Mock
+            newLog.Id = Mock_GetNextTourLogId();
+            mock_selected_tour.TourLogs.Add(newLog);
+            mock_logs.Add(newLog);
+
+            //Return Copy of added TourLog
+            return new TourLog(newLog);
         }
 
-        public List<Tour> GetAllTours()
+        public async Task<List<Tour>> GetAllTours()
         {
             //throw new BLLNotImplementedException("Get All Tours");
 
             // currently only seed data
             if (mock_tours == null || mock_tours.Count <= 0)
             {
-                mock_tours = Mock_TestTours();
+                await Mock_TestTours();
             }
 
-            return mock_tours;
+            // Return List of Copies
+            List<Tour> tours = new List<Tour>();
+
+            foreach (Tour t in mock_tours)
+            {
+                tours.Add(new Tour(t));
+            }
+
+            return tours;
         }
 
-        public List<TourLog> GetAllToursLogOfTour(Tour tour)
+        public List<TourLog> GetAllTourLogsOfTour(Tour tour)
         {
             //throw new BLLNotImplementedException("Get All Tours Log Of Tour");
 
             // check if tour exists
             // get all logs
             mock_selected_tour = GetExistingTour(tour.Id);
-            return mock_selected_tour.TourLogs;
+
+            // Return List of Copies
+            List<TourLog> logs = new List<TourLog>();
+
+            foreach (TourLog l in mock_selected_tour.TourLogs)
+            {
+                logs.Add(new TourLog(l));
+            }
+
+            return logs;
         }
 
         public Tour RemoveTour(Tour tour)
@@ -85,18 +122,42 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
 
         public Tour UpdateTour(Tour tour)
         {
+            //throw new BLLNotImplementedException("Update Tour");
             // check if tour exists
             // check what changed
-            throw new BLLNotImplementedException("Update Tour");
+            mock_selected_tour = GetExistingTour(tour.Id);
+            List<TourLog> temp_TourLogs = GetAllTourLogsOfTour(mock_selected_tour);
             foreach (TourLog log in tour.TourLogs)
             {
-
+                TourLog temp = temp_TourLogs.Find(l => l.Id == log.Id);
+                if (temp != null)
+                {
+                    temp_TourLogs.Remove(temp);
+                    UpdateTourLog(log);
+                }
+                else
+                {
+                    AddTourLogToTour(tour, log);
+                }
             }
+
+            foreach (TourLog temp in temp_TourLogs)
+            {
+                RemoveTourLog(temp);
+            }
+
+            return tour;
         }
 
         public TourLog UpdateTourLog(TourLog log)
         {
-            throw new BLLNotImplementedException("Update Tour Log");
+            //throw new BLLNotImplementedException("Update Tour Log");
+
+            mock_selected_tour = GetExistingTour(log.TourId);
+            mock_logs.Add(log);
+            mock_selected_tour.TourLogs.Add(log);
+
+            return log;
         }
 
         private Tour GetExistingTour(int id)
@@ -119,9 +180,37 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             return log;
         }
 
-        private string GetOSMjson(Tour tour)
+        private async Task CalculateRoute(Tour tour)
         {
-            return "Not Implemented Yet";
+            if (tour != null && !String.IsNullOrEmpty(tour.From) && !String.IsNullOrEmpty(tour.To))
+            {
+                try
+                {
+                    var json = await new OpenRouteService(IBusinessLayer.ApiKey).GetDirectionsAsync(tour.From, tour.To, tour.TransportType);
+
+                    var directionsResult = JsonConvert.DeserializeObject<DirectionsResult>(json);
+                    if (directionsResult != null && directionsResult.Features != null && directionsResult.Features.Count > 0)
+                    {
+                        var firstFeature = directionsResult.Features[0];
+                        var coordinates = firstFeature.Geometry.Coordinates;
+                        var properties = firstFeature.Properties;
+                        var summary = properties.Summary;
+
+                        tour.OSMjson = json;
+                        tour.Distance = summary.Distance;
+                        tour.Time = summary.Duration;
+                        tour.RouteInformation = $"Tour from {tour.From} to {tour.To} by {tour.TransportType}\n{properties.ToString()}";
+                    }
+                }
+                catch (Exception)
+                {
+                    throw new BLLConflictException("Route could not be calculated.");
+                }
+            }
+            else
+            {
+                throw new BLLConflictException("Route could not be calculated.");
+            }
         }
 
         private int Mock_GetNextTourId()
@@ -144,24 +233,21 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             return log.Id + 1;
         }
 
-        private List<Tour> Mock_TestTours()
+        private async Task Mock_TestTours()
         {
-            List<Tour> tours = new List<Tour>();
-            for (int i = 1; i < 6; i++)
+            mock_tours = new List<Tour>();
+            for (int i = 1; i < 2; i++)
             {
-                tours.Add(new Tour()
+                Tour t = await AddTour(new Tour()
                 {
                     Name = $"Name {i}",
                     Description = $"Desc {i}",
                     From = $"HTL Krems",
                     To = $"FH-Technikum Wien",
                     TransportType = ETransportType.Car,
-                    Distance = i * 100,
-                    Time = i * 30,
                     RouteInformation = $"Info {i}"
                 });
             }
-            return tours;
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SWE_TourPlanner_WPF"
         mc:Ignorable="d"
-        Title="CreateTour" Height="400" Width="600">
+        Title="CreateTour" Height="170" Width="600">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
@@ -15,25 +15,22 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
+            <ColumnDefinition  Width="150px"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
             <RowDefinition Height="30px"/>
         </Grid.RowDefinitions>
         <local:TourInputFields Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"/>
-        <Grid Grid.Column="0" Grid.Row="3" Grid.RowSpan="3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30px"/>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Label Grid.Row="0" Content="Route Information:"/>
-            <TextBox Grid.Row="1" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="{Binding SelectedTour.RouteInformation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        </Grid>
-        <Button x:Name="btn_CreateTour" Click="btn_CreateTour_Click" Command="{Binding CreateTourCommand}" Grid.Column="0" Grid.Row="6">Create Tour</Button>
+
+        <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="3">
+            <Label Content="Transport Type:"/>
+            <RadioButton x:Name="rbtn_TransportType_Bike" Content="Bike" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Bike}}"/>
+            <RadioButton x:Name="rbtn_TransportType_Car" Content="Car" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Car}}"/>
+            <RadioButton x:Name="rbtn_TransportType_Foot" Content="Foot" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Foot}}"/>
+        </StackPanel>
+        <Button x:Name="btn_CreateTour" Click="btn_CreateTour_Click" Command="{Binding CreateTourCommand}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6">Create Tour</Button>
     </Grid>
 </Window>

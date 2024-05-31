@@ -15,10 +15,8 @@
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
-            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition />
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
@@ -35,35 +33,12 @@
 
         <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
             <Label Content="From:"/>
-            <TextBox Text="{Binding SelectedTour.From, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox IsEnabled="{Binding SelectedTourIsNotCalculated}" Text="{Binding SelectedTour.From, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
         <StackPanel Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2">
             <Label Content="To:"/>
-            <TextBox Text="{Binding SelectedTour.To, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        </StackPanel>
-
-        <StackPanel Grid.Column="4" Grid.Row="0" Grid.RowSpan="3">
-            <Label Content="Transport Type:"/>
-            <RadioButton x:Name="rbtn_TransportType_Bike" Content="Bike" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Bike}}"/>
-            <RadioButton x:Name="rbtn_TransportType_Car" Content="Car" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Car}}"/>
-            <RadioButton x:Name="rbtn_TransportType_Foot" Content="Foot" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Foot}}"/>
-        </StackPanel>
-
-        <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Distance (in km):"/>
-                <Label Content="{Binding SelectedTour.Distance, Mode=TwoWay}"/>
-            </StackPanel>
-            <Slider Value="{Binding SelectedTour.Distance, Mode=TwoWay}" Minimum="0" Maximum="500"/>
-        </StackPanel>
-
-        <StackPanel Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Time (in min):"/>
-                <Label Content="{Binding SelectedTour.Time, Mode=TwoWay}"/>
-            </StackPanel>
-            <Slider Value="{Binding SelectedTour.Time, Mode=TwoWay}" Minimum="0" Maximum="360"/>
+            <TextBox IsEnabled="{Binding SelectedTourIsNotCalculated, UpdateSourceTrigger=PropertyChanged}" Text="{Binding SelectedTour.To, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
     </Grid>
 </UserControl>

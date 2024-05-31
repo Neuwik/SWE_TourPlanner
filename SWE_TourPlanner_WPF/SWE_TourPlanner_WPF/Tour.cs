@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Documents;
 
 namespace SWE_TourPlanner_WPF
@@ -19,17 +20,41 @@ namespace SWE_TourPlanner_WPF
         public string From { get; set; }
         public string To { get; set; }
         public ETransportType TransportType { get; set; }
-        public int Distance { get; set; }
-        public int Time { get; set; }
+        public double Distance { get; set; }
+        public double Time { get; set; }
         public string RouteInformation { get; set; }
-        public string ImagePath { get; set; }
         public string OSMjson { get; set; }
         public List<TourLog> TourLogs { get; set; } = new List<TourLog>();
+        public string DistanceString
+        {
+            get
+            {
+                string distance = $"{Math.Truncate((Distance * 10)) / 10}m";
+                if (Distance > 1000)
+                {
+                    distance = $"{Math.Truncate((Distance / 1000 * 10)) / 10}km";
+                }
+                return distance;
+            }
+        }
+        public string TimeString
+        {
+            get
+            {
+                TimeSpan t = TimeSpan.FromSeconds(Time);
+
+                return string.Format("{0:D2}h:{1:D2}m:{2:D2}s",
+                                t.Hours,
+                                t.Minutes,
+                                t.Seconds
+                                );
+            }
+        }
 
 
         public Tour() { }
 
-        public Tour(string name, string description, string from, string to, ETransportType transportType, int distance, int time, string routeInformation, string imagePath, List<TourLog> tourLogs)
+        public Tour(string name, string description, string from, string to, ETransportType transportType, int distance, int time, string routeInformation, string osmjson, List<TourLog> tourLogs)
         {
             Name = name;
             Description = description;
@@ -39,7 +64,7 @@ namespace SWE_TourPlanner_WPF
             Distance = distance;
             Time = time;
             RouteInformation = routeInformation;
-            ImagePath = imagePath;
+            OSMjson = osmjson;
             TourLogs = tourLogs;
         }
 
@@ -54,14 +79,14 @@ namespace SWE_TourPlanner_WPF
             Distance = other.Distance;
             Time = other.Time;
             RouteInformation = other.RouteInformation;
-            ImagePath = other.ImagePath;
+            OSMjson = other.OSMjson;
             foreach (TourLog tourLog in other.TourLogs)
             {
                 TourLogs.Add(new TourLog(tourLog));
             }
         }
 
-        public bool AreAllParamsSet()
+        public bool AreAllInputParamsSet()
         {
             if (String.IsNullOrEmpty(Name))
             {
@@ -80,18 +105,6 @@ namespace SWE_TourPlanner_WPF
                 return false;
             }
             if (TransportType == null)
-            {
-                return false;
-            }
-            if (Distance < 0)
-            {
-                return false;
-            }
-            if (Time < 0)
-            {
-                return false;
-            }
-            if (String.IsNullOrEmpty(RouteInformation))
             {
                 return false;
             }
