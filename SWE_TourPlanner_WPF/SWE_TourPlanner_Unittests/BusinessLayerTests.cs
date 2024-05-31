@@ -14,13 +14,13 @@ namespace SWE_TourPlanner_Unittests
     public class BusinessLayerTests
     {
         private Mock<DatabaseHandler> _databaseHandlerMock;
-        private BusinessLayer _businessLayer;
+        private BusinessLayer _businessLayerMock;
 
         [SetUp]
         public void Setup()
         {
             _databaseHandlerMock = new Mock<DatabaseHandler>();
-            //_businessLayer = new BusinessLayer(_databaseHandlerMock.Object);
+            _businessLayerMock = new BusinessLayer(_databaseHandlerMock.Object);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace SWE_TourPlanner_Unittests
             };
 
             // Act
-            var result = await _businessLayer.AddTour(tour);
+            var result = await _businessLayerMock.AddTour(tour);
 
             // Assert
             _databaseHandlerMock.Verify(d => d.AddTour(It.IsAny<Tour>()), Times.Once);
@@ -49,13 +49,13 @@ namespace SWE_TourPlanner_Unittests
         {
             // Arrange
             var tour = new Tour { Id = 1, Name = "Test Tour" };
-            var log = new TourLog { Comment = "Test Log", Difficulty = EDifficulty.easy };
+            var log = new TourLog { Comment = "Test Log", Difficulty = EDifficulty.Easy };
 
             // Mock existing tour
             _databaseHandlerMock.Setup(d => d.GetTour(1)).Returns(tour);
 
             // Act
-            var result = _businessLayer.AddTourLogToTour(tour, log);
+            var result = _businessLayerMock.AddTourLogToTour(tour, log);
 
             // Assert
             _databaseHandlerMock.Verify(d => d.AddTourLog(It.IsAny<TourLog>()), Times.Once);
@@ -73,10 +73,10 @@ namespace SWE_TourPlanner_Unittests
                 new Tour { Id = 2, Name = "Test Tour 2" }
             };
 
-            _businessLayer.Setup(d => d.GetAllTours()).ReturnsAsync(tours);
+            _businessLayerMock.Setup(d => d.GetAllTours()).ReturnsAsync(tours);
 
             // Act
-            var result = await _businessLayer.GetAllTours();
+            var result = await _businessLayerMock.GetAllTours();
 
             // Assert
             ClassicAssert.AreEqual(tours.Count, result.Count);
@@ -98,7 +98,7 @@ namespace SWE_TourPlanner_Unittests
             _databaseHandlerMock.Setup(d => GetAllLogsByTourId(1)).Returns(logs);
 
             // Act
-            var result = _businessLayer.GetAllTourLogsOfTour(tour);
+            var result = _businessLayerMock.GetAllTourLogsOfTour(tour);
 
             // Assert
             ClassicAssert.AreEqual(logs.Count, result.Count);

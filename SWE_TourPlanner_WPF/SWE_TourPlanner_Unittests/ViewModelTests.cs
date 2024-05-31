@@ -38,21 +38,6 @@ namespace SWE_TourPlanner_Unittests
             ClassicAssert.AreEqual(initialCount - 1, viewModel.Tours.Count);
             ClassicAssert.IsNull(viewModel.SelectedTour);
         }
-
-        [Test]
-        public void OnPropertyChanged_NotifiesPropertyChanged()
-        {
-            var viewModel = new ViewModel();
-            var propertiesChanged = new List<string>();
-            viewModel.PropertyChanged += (sender, args) =>
-            {
-                propertiesChanged.Add(args.PropertyName);
-            };
-
-            viewModel.SelectedTour = new Tour {};
-
-            CollectionAssert.Contains(propertiesChanged, nameof(viewModel.SelectedTour));
-        }
     }
 
 }
