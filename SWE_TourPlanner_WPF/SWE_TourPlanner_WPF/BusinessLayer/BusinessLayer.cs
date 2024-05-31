@@ -16,7 +16,18 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
 {
     public class BusinessLayer : IBusinessLayer
     {
-        private DatabaseHandler _DatabaseHandler = new DatabaseHandler();
+        private DatabaseHandler _DatabaseHandler;
+
+        public BusinessLayer()
+        {
+            _DatabaseHandler = new DatabaseHandler();
+        }
+
+        public BusinessLayer(DatabaseHandler databaseHandler)
+        {
+            // Used for UnitTests
+            _DatabaseHandler = databaseHandler;
+        }
 
         public async Task<Tour> AddTour(Tour tour)
         {

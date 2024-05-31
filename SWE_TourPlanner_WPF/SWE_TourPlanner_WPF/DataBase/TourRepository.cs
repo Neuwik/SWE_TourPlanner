@@ -9,7 +9,7 @@ using System.Windows.Documents;
 
 namespace SWE_TourPlanner_WPF.DataBase
 {
-    class TourRepository : ARepository<Tour, int>
+    public class TourRepository : ARepository<Tour, int>
     {
         public TourRepository(DatabaseContext context) : base(context) {}
 

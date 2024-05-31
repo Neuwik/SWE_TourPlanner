@@ -17,7 +17,7 @@ using System.Windows;
 
 namespace SWE_TourPlanner_WPF.DataBase
 {
-    class DatabaseHandler : IDisposable
+    public class DatabaseHandler : IDisposable
     {
         private string _ConnectionString = @"Host=localhost;Port=5432;Database=SWE_TourPlanner_DB;Username=SWE_TourPlanner_User;Password=Debian123!;"; 
         private DatabaseContext _DatabaseContext;
@@ -39,29 +39,17 @@ namespace SWE_TourPlanner_WPF.DataBase
             _Host.Start();
             _Scope = _Host.Services.CreateScope();
             _DatabaseContext = _Scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-
-            if (!_DatabaseContext.Database.CanConnect())
-            {
-                if (!_DatabaseContext.Database.EnsureCreated())
-                {
-                    throw new Exception("Debug DB HI");
-                }
-                else
-                {
-                    MessageBox.Show("Debug DB Created");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Debug DB Exists");
-            }
-
             _DatabaseContext.Database.EnsureCreated();
 
             _TourRepo = new TourRepository(_DatabaseContext);
             _TourLogRepo = new TourLogRepository(_DatabaseContext);
+        }
 
-            //SeedData();
+        public DatabaseHandler(DatabaseContext databaseContext, TourRepository tourRepo, TourLogRepository tourLogRepo)
+        {
+            _DatabaseContext = databaseContext;
+            _TourRepo = tourRepo;
+            _TourLogRepo = tourLogRepo;
         }
 
         public void Dispose()

@@ -1,42 +1,58 @@
 CMD Commands:
 
+------------------------------------------
+
 Pull Postgres:
 docker pull postgres
+
+------------------------------------------
 
 Create/Run Container:
 docker run --name SWE_TourPlanner_Container -e POSTGRES_PASSWORD=Debian123! -e POSTGRES_USER=SWE_TourPlanner_User -e POSTGRES_DB=SWE_TourPlanner_DB -p 5432:5432 -d postgres
 
+------------------------------------------
+
 Check if Container is running:
 docker ps
+
+------------------------------------------
 
 Create Database: (NOT NEEDED BECAUSE OF "-e POSTGRES_DB=SWE_TourPlanner_DB" IN THE RUN COMMAND)
 docker exec -it SWE_TourPlanner_Container psql -U SWE_TourPlanner_User -d postgres -c "CREATE DATABASE SWE_TourPlanner_DB;"
 
+------------------------------------------
+
 Check if Database exists: (press 'q' to quit the commandline)
 docker exec -it SWE_TourPlanner_Container psql -U SWE_TourPlanner_User -d postgres -c "\l"
+
+------------------------------------------
 
 Check Database Tables in Bash:
 $ docker exec -it SWE_TourPlanner_Container bash
 
 root@container_id:/# psql -U SWE_TourPlanner_User -d SWE_TourPlanner_DB
-psql (13.3 (Debian 13.3-1.pgdg100+1))
-Type "help" for help.
 
 SWE_TourPlanner_DB=# \dt
-               List of relations
- Schema |       Name       | Type  |  Owner   
---------+------------------+-------+----------
- public | your_table_name1 | table | postgres
- public | your_table_name2 | table | postgres
-(2 rows)
 
-SWE_TourPlanner_DB=# SELECT * FROM "Tours";
+SWE_TourPlanner_DB=# SELECT "Name" FROM "Tours";
 
-SWE_TourPlanner_DB=# SELECT * FROM "TourLogs";
+SWE_TourPlanner_DB=# SELECT "DateTime", "Comment" FROM "TourLogs";
 
 SWE_TourPlanner_DB=# \q
 
 root@container_id:/# exit
 
+------------------------------------------
+
 Reset DB Data:
+$ docker exec -it SWE_TourPlanner_Container bash
+
+root@container_id:/# psql -U SWE_TourPlanner_User -d SWE_TourPlanner_DB
+
 SWE_TourPlanner_DB=# TRUNCATE TABLE "Tours" CASCADE;
+
+SWE_TourPlanner_DB=# \q
+
+root@container_id:/# exit
+
+------------------------------------------

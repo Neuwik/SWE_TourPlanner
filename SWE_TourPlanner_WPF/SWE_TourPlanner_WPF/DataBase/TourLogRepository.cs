@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SWE_TourPlanner_WPF.DataBase
 {
-    class TourLogRepository : ARepository<TourLog, int>
+    public class TourLogRepository : ARepository<TourLog, int>
     {
         public TourLogRepository(DatabaseContext context) : base(context)
         {
