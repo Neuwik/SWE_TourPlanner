@@ -103,6 +103,15 @@ namespace SWE_TourPlanner_WPF
             }
         }
 
+        private ICommandHandler _printTourReportCommand;
+        public ICommandHandler PrintTourReportCommand
+        {
+            get
+            {
+                return _printTourReportCommand ?? (_printTourReportCommand = new ICommandHandler(() => PrintTourReport(), () => IsTourSelected));
+            }
+        }
+
         private ICommandHandler _reloadToursCommand;
         public ICommandHandler ReloadToursCommand
         {
@@ -160,6 +169,22 @@ namespace SWE_TourPlanner_WPF
                 try
                 {
                     SelectedTour = IBusinessLayer.Instance.RemoveTour(SelectedTour);
+                    await ReloadTours();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
+            }
+        }
+
+        public async Task PrintTourReport()
+        {
+            if (SelectedTour != null)
+            {
+                try
+                {
+                    SelectedTour = IBusinessLayer.Instance.PrintReportPDF(SelectedTour);
                     await ReloadTours();
                 }
                 catch (Exception e)

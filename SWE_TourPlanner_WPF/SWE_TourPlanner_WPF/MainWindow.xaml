@@ -19,6 +19,7 @@
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -31,7 +32,8 @@
         <Button x:Name="btn_CreateTour" Grid.Column="0" Grid.Row="0" Click="btn_CreateTour_Click" Command="{Binding OpenCreateWindow}">Create Tour</Button>
         <Button x:Name="btn_DeleteTour" Grid.Column="1" Grid.Row="0" Command="{Binding DeleteTourCommand}">Delete Tour</Button>
         <Button x:Name="btn_UpdateTour" Grid.Column="2" Grid.Row="0" Command="{Binding UpdateTourCommand}">Update Tour</Button>
-        <Button x:Name="btn_ReloadTours" Grid.Column="3" Grid.Row="0" Command="{Binding ReloadToursCommand}">Reload Tours</Button>
+        <Button x:Name="btn_PrintTourReport" Grid.Column="3" Grid.Row="0" Command="{Binding PrintTourReportCommand}">Print Tour Report</Button>
+        <Button x:Name="btn_ReloadTours" Grid.Column="4" Grid.Row="0" Command="{Binding ReloadToursCommand}">Reload Tours</Button>
 
         <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="4" ItemsSource="{Binding Tours}" SelectedItem="{Binding SelectedTour}">
             <ListView.View>
@@ -41,7 +43,7 @@
             </ListView.View>
         </ListView>
 
-        <TabControl Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="2" IsEnabled="{Binding IsTourSelected}">
+        <TabControl Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="2" IsEnabled="{Binding IsTourSelected}">
             <TabItem Header="General">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -52,6 +54,8 @@
                     <local:TourInputFields Grid.Row="0" Grid.RowSpan="2"/>
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
                             <ColumnDefinition />
                             <ColumnDefinition />
                             <ColumnDefinition />
@@ -73,6 +77,16 @@
                             <TextBlock Text="Transport Type:"/>
                             <TextBlock Text="{Binding SelectedTour.TransportType}"/>
                         </StackPanel>
+
+                        <StackPanel Grid.Column="3" Grid.Row="0">
+                            <TextBlock Text="Child-Friendliness:"/>
+                            <TextBlock Text="{Binding SelectedTour.ChildFriendliness}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4" Grid.Row="0">
+                            <TextBlock Text="Popularity:"/>
+                            <TextBlock Text="{Binding SelectedTour.Popularity}"/>
+                        </StackPanel>
                     </Grid>
                 </Grid>
             </TabItem>
@@ -89,7 +103,7 @@
             </TabItem>
         </TabControl>
 
-        <DataGrid Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" Grid.RowSpan="2" AutoGenerateColumns="False" ItemsSource="{Binding SelectedTour.TourLogs, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTourSelected}">
+        <DataGrid Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="3" Grid.RowSpan="2" AutoGenerateColumns="False" ItemsSource="{Binding SelectedTour.TourLogs, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTourSelected}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="DateTime (UTC)" Binding="{Binding DateTime}"/>
                 <DataGridTextColumn Header="TotalDistance (in Meters)" Binding="{Binding TotalDistance}"/>

@@ -44,7 +44,49 @@ namespace SWE_TourPlanner_WPF
                 return ToStringHelpers.DurationInSecondsToString(Time);
             }
         }
+        public EDifficulty ChildFriendliness
+        {
+            get
+            {
+                double avgTourLogDifficulty = (int)EDifficulty.Medium;
+                double avgTourLogDistance = Distance;
+                double avgTourLogTime = Time;
+                if (TourLogs != null && TourLogs.Count > 0)
+                {
+                    avgTourLogDifficulty = TourLogs.Sum<TourLog>(l => (int)l.Difficulty) / TourLogs.Count;
+                    avgTourLogDistance = TourLogs.Sum<TourLog>(l => l.TotalDistance) / TourLogs.Count;
+                    avgTourLogTime = TourLogs.Sum<TourLog>(l => l.TotalTime) / TourLogs.Count;
+                }
 
+                double typeMod = ((int)TransportType + 1)/  (int)ETransportType.Foot;
+
+                // Every Step = 1 Points
+                double pointsDifficulty = avgTourLogDifficulty+1;
+
+                // Every 10km = 1 Point
+                double pointsDistance = avgTourLogDistance * typeMod / 1000 / 10;
+
+                // Every 2h = 1 Point
+                double pointsTime = avgTourLogTime * typeMod / 3600 / 2;
+
+                int intChildFriendliness = (int)((pointsDifficulty * 0.5 + pointsDistance * 0.25 + pointsTime * 0.25));
+
+                if (intChildFriendliness < (int)EDifficulty.VeryEasy)
+                    return EDifficulty.VeryEasy;
+                if (intChildFriendliness > (int)EDifficulty.VeryHard)
+                    return EDifficulty.VeryHard;
+
+                return (EDifficulty)intChildFriendliness;
+            }
+        }
+
+        public int Popularity
+        {
+            get
+            {
+                return TourLogs != null ? TourLogs.Count : 0;
+            }
+        }
 
         public Tour() { }
 
@@ -120,7 +162,7 @@ namespace SWE_TourPlanner_WPF
 
         public override string ToString()
         {
-            return $"Tour Id: {Id}, Name: {Name}, Description: {Description}, From: {From}, To: {To}, Transport Type: {TransportType}, Distance: {DistanceString}, Time: {TimeString}, Tour Logs Count: {TourLogs.Count}";
+            return $"Tour Id: {Id}, Name: {Name}, Description: {Description}, From: {From}, To: {To}, Transport Type: {TransportType}, Distance: {DistanceString}, Time: {TimeString}, Tour Logs Count: {TourLogs.Count}, Popularity: {Popularity}, Child-Friendliness: {ChildFriendliness}";
         }
     }
 }

@@ -47,4 +47,10 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
         public BLLConflictException() : base(409, "Conflict") { }
         public BLLConflictException(string message) : base(409, "Conflict", message) { }
     }
+
+    public class BLLServiceUnavailable : BusinessLayerException
+    {
+        public BLLServiceUnavailable() : base(503, "Service Unavailable") { }
+        public BLLServiceUnavailable(string message) : base(503, "Service Unavailable", message) { }
+    }
 }

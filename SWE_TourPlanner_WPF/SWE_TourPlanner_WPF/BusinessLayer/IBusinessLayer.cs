@@ -12,6 +12,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
     {
         protected static readonly ILoggerWrapper logger = LoggerFactory.GetLogger();
 
+        public static readonly string ReportPath = "Reports";
         protected const string ApiKey = "5b3ce3597851110001cf62483a397f95f86441adb7cbf0789ae0d615";
 
         protected static IBusinessLayer? _instance;
@@ -34,5 +35,6 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
         public TourLog RemoveTourLog(TourLog log);
         public Task<List<Tour>> GetAllTours();
         public List<TourLog> GetAllTourLogsOfTour(Tour tour);
+        public Tour PrintReportPDF(Tour tour);
     }
 }
