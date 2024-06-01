@@ -57,7 +57,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer.MapHelpers
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                //MessageBox.Show(e.Message);
                 throw;
             }
         }
@@ -86,7 +86,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer.MapHelpers
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                //MessageBox.Show(e.Message);
                 throw;
             }
         }
