@@ -1,11 +1,9 @@
-﻿using Microsoft.Web.WebView2.Core;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SWE_TourPlanner_WPF.BusinessLayer;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
