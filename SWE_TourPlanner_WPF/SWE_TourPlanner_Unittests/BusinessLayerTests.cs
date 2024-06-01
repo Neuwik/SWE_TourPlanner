@@ -3,10 +3,10 @@ using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SWE_TourPlanner_WPF.BusinessLayer;
-using SWE_TourPlanner_WPF.DataBase;
-using SWE_TourPlanner_WPF;
+using SWE_TourPlanner_WPF.DataAccessLayer;
 using System.Linq;
 using NUnit.Framework.Legacy;
+using SWE_TourPlanner_WPF.Models;
 
 namespace SWE_TourPlanner_Unittests
 {
@@ -64,7 +64,7 @@ namespace SWE_TourPlanner_Unittests
         }
 
         [Test]
-        public async Task GetAllTours_ReturnsAllTours()
+        public void GetAllTours_ReturnsAllTours()
         {
             // Arrange
             var tours = new List<Tour>
@@ -73,10 +73,10 @@ namespace SWE_TourPlanner_Unittests
                 new Tour { Id = 2, Name = "Test Tour 2" }
             };
 
-            _businessLayerMock.Setup(d => d.GetAllTours()).ReturnsAsync(tours);
+            _databaseHandlerMock.Setup(d => d.GetAllTours()).Returns(tours);
 
             // Act
-            var result = await _businessLayerMock.GetAllTours();
+            var result = _businessLayerMock.GetAllTours();
 
             // Assert
             ClassicAssert.AreEqual(tours.Count, result.Count);
@@ -95,7 +95,7 @@ namespace SWE_TourPlanner_Unittests
             };
 
             _databaseHandlerMock.Setup(d => d.GetTour(1)).Returns(tour);
-            _databaseHandlerMock.Setup(d => GetAllLogsByTourId(1)).Returns(logs);
+            _databaseHandlerMock.Setup(d => d.GetTourLogs(1)).Returns(logs);
 
             // Act
             var result = _businessLayerMock.GetAllTourLogsOfTour(tour);

@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace SWE_TourPlanner_WPF
+namespace SWE_TourPlanner_WPF.Models
 {
     [Table("Tours")]
     public class Tour
@@ -25,7 +25,7 @@ namespace SWE_TourPlanner_WPF
         public string OSMjson { get; set; }
 
         public ICollection<TourLog> TourLogs { get; set; } = new List<TourLog>();
-        
+
         [JsonIgnore]
         public string DistanceString
         {
@@ -47,10 +47,10 @@ namespace SWE_TourPlanner_WPF
         {
             get
             {
-                double typeMod = ((int)TransportType + 1)/  (int)ETransportType.Foot;
+                double typeMod = ((int)TransportType + 1) / (int)ETransportType.Foot;
 
                 // Every Step = 1 Points
-                double pointsDifficulty = AvgTourLogDiffiuly+1;
+                double pointsDifficulty = AvgTourLogDiffiuly + 1;
 
                 // Every 10km = 1 Point
                 double pointsDistance = AvgTourLogTotalDistance * typeMod / 1000 / 10;
@@ -58,7 +58,7 @@ namespace SWE_TourPlanner_WPF
                 // Every 2h = 1 Point
                 double pointsTime = AvgTourLogTotalTime * typeMod / 3600 / 2;
 
-                int intChildFriendliness = (int)((pointsDifficulty * 0.5 + pointsDistance * 0.25 + pointsTime * 0.25));
+                int intChildFriendliness = (int)(pointsDifficulty * 0.5 + pointsDistance * 0.25 + pointsTime * 0.25);
 
                 if (intChildFriendliness < (int)EDifficulty.VeryEasy)
                     return EDifficulty.VeryEasy;
@@ -84,7 +84,7 @@ namespace SWE_TourPlanner_WPF
                 double avgTourLogDifficulty = (int)EDifficulty.Medium;
                 if (TourLogs != null && TourLogs.Count > 0)
                 {
-                    avgTourLogDifficulty = TourLogs.Sum<TourLog>(l => (int)l.Difficulty) / TourLogs.Count;
+                    avgTourLogDifficulty = TourLogs.Sum(l => (int)l.Difficulty) / TourLogs.Count;
                 }
                 return avgTourLogDifficulty;
             }
@@ -97,7 +97,7 @@ namespace SWE_TourPlanner_WPF
                 double avgTourLogDistance = Distance;
                 if (TourLogs != null && TourLogs.Count > 0)
                 {
-                    avgTourLogDistance = TourLogs.Sum<TourLog>(l => l.TotalDistance) / TourLogs.Count;
+                    avgTourLogDistance = TourLogs.Sum(l => l.TotalDistance) / TourLogs.Count;
                 }
                 return avgTourLogDistance;
             }
@@ -110,7 +110,7 @@ namespace SWE_TourPlanner_WPF
                 double avgTourLogTime = Time;
                 if (TourLogs != null && TourLogs.Count > 0)
                 {
-                    avgTourLogTime = TourLogs.Sum<TourLog>(l => l.TotalTime) / TourLogs.Count;
+                    avgTourLogTime = TourLogs.Sum(l => l.TotalTime) / TourLogs.Count;
                 }
                 return avgTourLogTime;
             }
@@ -123,7 +123,7 @@ namespace SWE_TourPlanner_WPF
                 double avgTourLogRating = (int)ERating.ZeroStars;
                 if (TourLogs != null && TourLogs.Count > 0)
                 {
-                    avgTourLogRating = TourLogs.Sum<TourLog>(l => (int)l.Rating) / TourLogs.Count;
+                    avgTourLogRating = TourLogs.Sum(l => (int)l.Rating) / TourLogs.Count;
                 }
                 return avgTourLogRating;
             }
@@ -162,7 +162,7 @@ namespace SWE_TourPlanner_WPF
                 TourLogs.Add(new TourLog(tourLog));
             }
         }
-        
+
         public void Update(Tour newTour)
         {
             Name = newTour.Name;
@@ -178,19 +178,19 @@ namespace SWE_TourPlanner_WPF
 
         public bool AreAllInputParamsSet()
         {
-            if (String.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(Name))
             {
                 return false;
             }
-            if (String.IsNullOrEmpty(Description))
+            if (string.IsNullOrEmpty(Description))
             {
                 return false;
             }
-            if (String.IsNullOrEmpty(From))
+            if (string.IsNullOrEmpty(From))
             {
                 return false;
             }
-            if (String.IsNullOrEmpty(To))
+            if (string.IsNullOrEmpty(To))
             {
                 return false;
             }
@@ -209,7 +209,7 @@ namespace SWE_TourPlanner_WPF
 
         public bool ContainsFilter(string filter)
         {
-            if (String.IsNullOrEmpty(filter))
+            if (string.IsNullOrEmpty(filter))
             {
                 return true;
             }

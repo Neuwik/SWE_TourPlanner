@@ -1,26 +1,20 @@
-﻿using System.Globalization;
-using System.Windows.Data;
+﻿using SWE_TourPlanner_WPF.Models;
 using System;
+using System.Globalization;
+using System.Windows.Data;
 
-namespace SWE_TourPlanner_WPF
+namespace SWE_TourPlanner_WPF.ViewLayer
 {
-    public enum ETransportType
-    {
-        Car = 0,
-        Bike = 1,
-        Foot = 2
-    }
-
     public class ETransportTypeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((ETransportType)value == (ETransportType)parameter);
+            return (ETransportType)value == (ETransportType)parameter;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((bool)value == true) ? parameter : null;
+            return (bool)value == true ? parameter : null;
         }
     }
 }

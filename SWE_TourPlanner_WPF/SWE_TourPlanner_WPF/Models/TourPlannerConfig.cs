@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SWE_TourPlanner_WPF
+namespace SWE_TourPlanner_WPF.Models
 {
     public class TourPlannerConfig
     {

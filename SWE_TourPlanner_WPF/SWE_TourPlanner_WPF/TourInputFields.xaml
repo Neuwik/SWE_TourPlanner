@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SWE_TourPlanner_WPF"
+             xmlns:viewlayer="clr-namespace:SWE_TourPlanner_WPF.ViewLayer"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="500">
     <UserControl.Resources>
-        <local:ETransportTypeConverter x:Key="ETransportTypeConverter"/>
+        <viewlayer:ETransportTypeConverter x:Key="ETransportTypeConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>

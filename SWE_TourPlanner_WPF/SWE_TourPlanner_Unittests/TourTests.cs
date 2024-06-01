@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework.Legacy;
 using SWE_TourPlanner_WPF;
+using SWE_TourPlanner_WPF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

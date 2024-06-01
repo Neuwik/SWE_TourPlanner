@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SWE_TourPlanner_WPF.Models;
 
 namespace SWE_TourPlanner_WPF.BusinessLayer.MapHelpers
 {
@@ -78,7 +79,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer.MapHelpers
             {
                 string ret = $"In {ToStringHelpers.DistanceInMetersToString(Distance)}";
 
-                ret += $"({ToStringHelpers.DurationInSecondsToString(Duration)}) {Instruction}";
+                ret += $" ({ToStringHelpers.DurationInSecondsToString(Duration)}) {Instruction}";
 
                 return ret;
             }

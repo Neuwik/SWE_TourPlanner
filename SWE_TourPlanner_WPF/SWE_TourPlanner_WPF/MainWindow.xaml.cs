@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
+using SWE_TourPlanner_WPF.ViewLayer;
 
 namespace SWE_TourPlanner_WPF
 {

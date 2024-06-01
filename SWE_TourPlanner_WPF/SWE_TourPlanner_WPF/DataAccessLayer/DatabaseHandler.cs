@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using SWE_TourPlanner_WPF.BusinessLayer;
+using SWE_TourPlanner_WPF.Models;
 
-namespace SWE_TourPlanner_WPF.DataBase
+namespace SWE_TourPlanner_WPF.DataAccessLayer
 {
     public class DatabaseHandler : IDisposable
     {

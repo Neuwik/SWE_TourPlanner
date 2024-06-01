@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace SWE_TourPlanner_WPF
+namespace SWE_TourPlanner_WPF.ViewLayer
 {
     public class ICommandHandler : ICommand
     {

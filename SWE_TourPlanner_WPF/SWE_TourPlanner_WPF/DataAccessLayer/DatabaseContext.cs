@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SWE_TourPlanner_WPF.Models;
 
-namespace SWE_TourPlanner_WPF.DataBase
+namespace SWE_TourPlanner_WPF.DataAccessLayer
 {
     public class DatabaseContext : DbContext
     {

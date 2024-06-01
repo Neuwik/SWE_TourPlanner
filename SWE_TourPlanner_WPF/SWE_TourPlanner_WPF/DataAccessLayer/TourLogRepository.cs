@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SWE_TourPlanner_WPF.Models;
 using System.Linq;
 
-namespace SWE_TourPlanner_WPF.DataBase
+namespace SWE_TourPlanner_WPF.DataAccessLayer
 {
     public class TourLogRepository : ARepository<TourLog, int>
     {

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using NUnit.Framework.Legacy;
 using SWE_TourPlanner_WPF;
+using SWE_TourPlanner_WPF.Models;
+using SWE_TourPlanner_WPF.ViewLayer;
 
 namespace SWE_TourPlanner_Unittests
 {

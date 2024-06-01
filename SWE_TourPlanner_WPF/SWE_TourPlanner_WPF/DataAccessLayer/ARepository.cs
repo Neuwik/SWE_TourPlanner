@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SWE_TourPlanner_WPF.DataBase
+namespace SWE_TourPlanner_WPF.DataAccessLayer
 {
     public abstract class ARepository<R, ID> : IDisposable
         where R : class

@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework.Legacy;
 using SWE_TourPlanner_WPF;
+using SWE_TourPlanner_WPF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace SWE_TourPlanner_Unittests
         {
             DateTime dateTime = DateTime.Now;
             string comment = "Test comment";
-            EDifficulty difficulty = EDifficulty.medium;
+            EDifficulty difficulty = EDifficulty.Medium;
             float totalDistance = 10.5f;
             float totalTime = 2.5f;
             ERating rating = ERating.FiveStars;
@@ -38,7 +39,7 @@ namespace SWE_TourPlanner_Unittests
 
             // Assert
             ClassicAssert.AreEqual("---", tourLog.Comment);
-            ClassicAssert.AreEqual(EDifficulty.medium, tourLog.Difficulty);
+            ClassicAssert.AreEqual(EDifficulty.Medium, tourLog.Difficulty);
             ClassicAssert.AreEqual(0, tourLog.TotalDistance);
             ClassicAssert.AreEqual(0, tourLog.TotalTime);
             ClassicAssert.AreEqual(ERating.ThreeStars, tourLog.Rating);
@@ -53,7 +54,7 @@ namespace SWE_TourPlanner_Unittests
             {
                 DateTime = DateTime.Now,
                 Comment = "Original comment",
-                Difficulty = EDifficulty.easy,
+                Difficulty = EDifficulty.Easy,
                 TotalDistance = 15.7f,
                 TotalTime = 3.0f,
                 Rating = ERating.FourStars
@@ -76,7 +77,7 @@ namespace SWE_TourPlanner_Unittests
             {
                 DateTime = new DateTime(2023, 5, 1, 10, 0, 0),
                 Comment = "Original comment",
-                Difficulty = EDifficulty.easy,
+                Difficulty = EDifficulty.Easy,
                 TotalDistance = 12.3,
                 TotalTime = 1800,
                 Rating = ERating.FourStars
@@ -86,7 +87,7 @@ namespace SWE_TourPlanner_Unittests
             {
                 DateTime = new DateTime(2024, 6, 2, 15, 30, 0),
                 Comment = "Updated comment",
-                Difficulty = EDifficulty.hard,
+                Difficulty = EDifficulty.Hard,
                 TotalDistance = 20.5,
                 TotalTime = 3600,
                 Rating = ERating.FiveStars
@@ -115,7 +116,7 @@ namespace SWE_TourPlanner_Unittests
                 TourId = 10,
                 DateTime = new DateTime(2023, 5, 1, 10, 0, 0),
                 Comment = "Test comment",
-                Difficulty = EDifficulty.medium,
+                Difficulty = EDifficulty.Medium,
                 TotalDistance = 15.5,
                 TotalTime = 3600,
                 Rating = ERating.ThreeStars

@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SWE_TourPlanner_WPF.BusinessLayer;
+using SWE_TourPlanner_WPF.Models;
+using SWE_TourPlanner_WPF.ViewLayer;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace SWE_TourPlanner_WPF
+namespace SWE_TourPlanner_WPF.ViewLayer
 {
     public class ViewModel : INotifyPropertyChanged
     {
@@ -22,7 +24,7 @@ namespace SWE_TourPlanner_WPF
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<Tour> AllTours{ get; set; }
+        public ObservableCollection<Tour> AllTours { get; set; }
 
         private string _searchFilter;
         public string SearchFilter
@@ -165,9 +167,8 @@ namespace SWE_TourPlanner_WPF
             }
         }
 
-        public ViewModel() 
+        public ViewModel()
         {
-
             try
             {
                 string json = File.ReadAllText(TourPlannerConfig.ConfigFile);
@@ -344,11 +345,11 @@ namespace SWE_TourPlanner_WPF
 
         private void DrawRoute()
         {
-            if (!String.IsNullOrEmpty(SelectedTour.OSMjson))
+            if (!string.IsNullOrEmpty(SelectedTour.OSMjson))
             {
                 var directionsContent = $"var directions = {SelectedTour.OSMjson};";
                 string appDir = AppDomain.CurrentDomain.BaseDirectory;
-                string filePath = System.IO.Path.Combine(appDir, DirectionsFilePath);
+                string filePath = Path.Combine(appDir, DirectionsFilePath);
                 File.WriteAllText(filePath, directionsContent);
                 if (UpdateMap != null)
                     UpdateMap();

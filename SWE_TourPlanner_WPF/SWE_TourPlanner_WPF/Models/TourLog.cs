@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using System.Windows.Documents;
 
-namespace SWE_TourPlanner_WPF
+namespace SWE_TourPlanner_WPF.Models
 {
     [Table("TourLogs")]
     public class TourLog
@@ -69,7 +69,7 @@ namespace SWE_TourPlanner_WPF
         {
             return $"TourLog Id: {Id}, TourId: {TourId}, DateTime: {DateTime}, Comment: {Comment}, Difficulty: {Difficulty}, TotalDistance: {TotalDistance}, TotalTime: {TotalTime}, Rating: {Rating}";
         }
-        
+
         public void Update(TourLog other)
         {
             DateTime = other.DateTime;

@@ -1,4 +1,5 @@
 ﻿using SWE_TourPlanner_WPF.BusinessLayer.Logging;
+using SWE_TourPlanner_WPF.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

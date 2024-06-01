@@ -1,17 +1,17 @@
 ﻿using System;
 
-namespace SWE_TourPlanner_WPF
+namespace SWE_TourPlanner_WPF.Models
 {
     public static class ToStringHelpers
     {
         public static string DistanceInMetersToString(double distanceInMeters)
         {
-            string distance = $"{Math.Truncate((distanceInMeters * 10)) / 10}m";
+            string distance = $"{Math.Truncate(distanceInMeters * 10) / 10}m";
             if (distanceInMeters > 1000)
             {
-                distance = $"{Math.Truncate((distanceInMeters / 1000 * 10)) / 10}km";
+                distance = $"{Math.Truncate(distanceInMeters / 1000 * 10) / 10}km";
             }
-            return distance ;
+            return distance;
         }
 
         public static string DurationInSecondsToString(double durationInSeconds)
