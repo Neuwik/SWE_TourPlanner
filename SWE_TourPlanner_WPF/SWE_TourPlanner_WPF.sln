@@ -4,7 +4,7 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SWE_TourPlanner_WPF", "SWE_TourPlanner_WPF\SWE_TourPlanner_WPF.csproj", "{65ADDB1E-747C-4E28-B1EC-070D199A931E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SWE_TourPlanner_Unittests", "SWE_TourPlanner_Unittests\SWE_TourPlanner_Unittests.csproj", "{B82AC125-F06A-4E5B-B6C6-626F6959D77C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SWE_TourPlanner_Unittests", "SWE_TourPlanner_Unittests\SWE_TourPlanner_Unittests.csproj", "{B82AC125-F06A-4E5B-B6C6-626F6959D77C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
