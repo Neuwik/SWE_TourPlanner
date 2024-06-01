@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 using System;
-using System.Collections.Generic;
 
 namespace SWE_TourPlanner_WPF
 {

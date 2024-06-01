@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-
 namespace SWE_TourPlanner_WPF.DataBase
 {
     public class TourRepository : ARepository<Tour, int>

@@ -1,9 +1,5 @@
-﻿using log4net;
-using SWE_TourPlanner_WPF.BusinessLayer.Logging;
-using System;
+﻿using SWE_TourPlanner_WPF.BusinessLayer.Logging;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SWE_TourPlanner_WPF.BusinessLayer

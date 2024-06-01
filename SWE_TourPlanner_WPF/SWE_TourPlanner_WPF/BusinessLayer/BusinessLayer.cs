@@ -2,22 +2,13 @@
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
-using log4net;
-using log4net.Repository.Hierarchy;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic.Logging;
 using Newtonsoft.Json;
-using Npgsql.Internal;
 using SWE_TourPlanner_WPF.BusinessLayer.MapHelpers;
 using SWE_TourPlanner_WPF.DataBase;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace SWE_TourPlanner_WPF.BusinessLayer
 {
