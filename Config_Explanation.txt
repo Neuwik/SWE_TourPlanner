@@ -1,0 +1,8 @@
+Before Building the Project change the Config File here:
+SWE_TourPlanner\SWE_TourPlanner_WPF\SWE_TourPlanner_WPF\Configs\config_TourPlanner.json
+
+When Bulding the config file from above will be copied here and will overwrite any existing config:
+SWE_TourPlanner\SWE_TourPlanner_WPF\SWE_TourPlanner_WPF\bin\Debug\net8.0-windows\Configs\config_TourPlanner.json
+
+After building the config file can be changed here (but only until next build):
+SWE_TourPlanner\SWE_TourPlanner_WPF\SWE_TourPlanner_WPF\bin\Debug\net8.0-windows\Configs\config_TourPlanner.json
