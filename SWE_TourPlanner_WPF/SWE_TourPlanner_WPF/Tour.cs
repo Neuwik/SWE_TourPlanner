@@ -72,7 +72,6 @@ namespace SWE_TourPlanner_WPF
                 return (EDifficulty)intChildFriendliness;
             }
         }
-
         public int Popularity
         {
             get

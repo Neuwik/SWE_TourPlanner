@@ -1,0 +1,13 @@
+{
+  "DataAccessLayer": {
+    "ConnectionString": "Host=localhost;Port=5432;Database=SWE_TourPlanner_DB;Username=SWE_TourPlanner_User;Password=Debian123!;"
+  },
+  "BusinessLayer": {
+    "ReportFolderPath": "Reports",
+    "ORS_ApiKey": "5b3ce3597851110001cf62483a397f95f86441adb7cbf0789ae0d615"
+  },
+  "ViewModel": {
+    "DirectionsFilePath": "Resources/directions.js",
+    "LeafletFilePath": "Resources/leaflet.html"
+  }
+}

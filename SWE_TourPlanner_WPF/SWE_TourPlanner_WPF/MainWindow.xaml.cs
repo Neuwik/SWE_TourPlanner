@@ -32,9 +32,8 @@ namespace SWE_TourPlanner_WPF
         {
             webView.Visibility = Visibility.Hidden;
             await webView.EnsureCoreWebView2Async(null);
-            // Assuming "example.html" is at the root of your project directory and set to "Copy to Output Directory"
             string appDir = AppDomain.CurrentDomain.BaseDirectory;
-            string filePath = System.IO.Path.Combine(appDir, ViewModel.LeafletFilePath);
+            string filePath = System.IO.Path.Combine(appDir, ((ViewModel)DataContext).LeafletFilePath);
             webView.CoreWebView2.Navigate(filePath);
             webView.Visibility = Visibility.Visible;
         }

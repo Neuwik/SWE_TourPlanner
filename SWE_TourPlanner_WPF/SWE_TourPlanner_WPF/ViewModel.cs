@@ -1,4 +1,5 @@
-﻿using SWE_TourPlanner_WPF.BusinessLayer;
+﻿using Newtonsoft.Json;
+using SWE_TourPlanner_WPF.BusinessLayer;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -12,8 +13,8 @@ namespace SWE_TourPlanner_WPF
 {
     public class ViewModel : INotifyPropertyChanged
     {
-        public const string DirectionsFilePath = "Resources/directions.js";
-        public const string LeafletFilePath = "Resources/leaflet.html";
+        public readonly string DirectionsFilePath;
+        public readonly string LeafletFilePath;
 
         public delegate Task UpdateMapDelegate();
         public UpdateMapDelegate UpdateMap { get; set; }
@@ -118,6 +119,20 @@ namespace SWE_TourPlanner_WPF
 
         public ViewModel() 
         {
+
+            try
+            {
+                string json = File.ReadAllText(TourPlannerConfig.ConfigFile);
+                TourPlannerConfig config = JsonConvert.DeserializeObject<TourPlannerConfig>(json);
+                DirectionsFilePath = config.ViewModel.DirectionsFilePath;
+                LeafletFilePath = config.ViewModel.LeafletFilePath;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                throw new Exception("ViewModel could not read config file.");
+            }
+
             Tours = new ObservableCollection<Tour> { };
         }
 

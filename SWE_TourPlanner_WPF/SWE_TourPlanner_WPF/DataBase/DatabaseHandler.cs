@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using SWE_TourPlanner_WPF.BusinessLayer;
 
 namespace SWE_TourPlanner_WPF.DataBase
 {
     public class DatabaseHandler : IDisposable
     {
-        private string _ConnectionString = @"Host=localhost;Port=5432;Database=SWE_TourPlanner_DB;Username=SWE_TourPlanner_User;Password=Debian123!;"; 
+        private string _ConnectionString; 
         private DatabaseContext _DatabaseContext;
         private TourRepository _TourRepo;
         private TourLogRepository _TourLogRepo;
@@ -18,6 +21,17 @@ namespace SWE_TourPlanner_WPF.DataBase
 
         public DatabaseHandler()
         {
+            try
+            {
+                string json = File.ReadAllText(TourPlannerConfig.ConfigFile);
+                TourPlannerConfig config = JsonConvert.DeserializeObject<TourPlannerConfig>(json);
+                _ConnectionString = config.DataAccessLayer.ConnectionString;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Database Handler could not read config file.");
+            }
+
             _Host = Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {

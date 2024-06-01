@@ -2,6 +2,7 @@
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using SWE_TourPlanner_WPF.BusinessLayer.MapHelpers;
 using SWE_TourPlanner_WPF.DataBase;
@@ -9,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Navigation;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace SWE_TourPlanner_WPF.BusinessLayer
 {
@@ -16,8 +19,23 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
     {
         private DatabaseHandler _DatabaseHandler;
 
+        private string _reportPath;
+        private string _apiKey;
+
         public BusinessLayer()
         {
+            try
+            {
+                string json = File.ReadAllText(TourPlannerConfig.ConfigFile);
+                TourPlannerConfig config = JsonConvert.DeserializeObject<TourPlannerConfig>(json);
+                _reportPath = config.BusinessLayer.ReportFolderPath;
+                _apiKey = config.BusinessLayer.ORS_ApiKey;
+            }
+            catch (Exception)
+            {
+                throw new BLLServiceUnavailable("Could not read config file.");
+            }
+
             try
             {
                 _DatabaseHandler = new DatabaseHandler();
@@ -320,7 +338,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 Tour dbTour = GetExistingTour(tour.Id);
 
                 string appDir = AppDomain.CurrentDomain.BaseDirectory;
-                string filePath = System.IO.Path.Combine(appDir, IBusinessLayer.ReportPath);
+                string filePath = System.IO.Path.Combine(appDir, _reportPath);
 
                 if (!Directory.Exists(filePath))
                 {
@@ -496,7 +514,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 {
                     IBusinessLayer.logger.Debug($"Trying to calculate Route for Tour {tour}.");
 
-                    var json = await new OpenRouteService(IBusinessLayer.ApiKey).GetDirectionsAsync(tour.From, tour.To, tour.TransportType);
+                    var json = await new OpenRouteService(_apiKey).GetDirectionsAsync(tour.From, tour.To, tour.TransportType);
 
                     var directionsResult = JsonConvert.DeserializeObject<DirectionsResult>(json);
                     if (directionsResult != null && directionsResult.Features != null && directionsResult.Features.Count > 0)
