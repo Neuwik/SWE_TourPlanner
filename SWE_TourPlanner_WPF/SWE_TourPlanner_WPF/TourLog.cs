@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using System.Windows.Documents;
 
 namespace SWE_TourPlanner_WPF
@@ -11,6 +12,7 @@ namespace SWE_TourPlanner_WPF
         [Key]
         public int Id { get; set; }
         public int TourId { get; set; }
+        [JsonIgnore]
         public Tour Tour { get; set; } = null!;
 
         private DateTime _dateTime;

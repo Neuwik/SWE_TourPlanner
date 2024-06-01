@@ -26,8 +26,11 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
         public TourLog AddTourLogToTour(Tour tour, TourLog log);
         public TourLog UpdateTourLog(TourLog log);
         public TourLog RemoveTourLog(TourLog log);
-        public Task<List<Tour>> GetAllTours();
+        public List<Tour> GetAllTours();
         public List<TourLog> GetAllTourLogsOfTour(Tour tour);
         public Tour PrintReportPDF(Tour tour);
+        public Tour PrintSummarizedReportPDF(Tour tour);
+        public Tour ExportTourToJson(Tour tour);
+        public Task<List<Tour>> ImportToursFromJson();
     }
 }

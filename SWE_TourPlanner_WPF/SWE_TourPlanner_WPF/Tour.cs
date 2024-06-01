@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Windows.Documents;
 using System.Windows.Input;
 
@@ -22,7 +23,10 @@ namespace SWE_TourPlanner_WPF
         public double Time { get; set; }
         public string RouteInformation { get; set; }
         public string OSMjson { get; set; }
-        public ICollection<TourLog> TourLogs { get; } = new List<TourLog>();
+
+        public ICollection<TourLog> TourLogs { get; set; } = new List<TourLog>();
+        
+        [JsonIgnore]
         public string DistanceString
         {
             get
@@ -30,6 +34,7 @@ namespace SWE_TourPlanner_WPF
                 return ToStringHelpers.DistanceInMetersToString(Distance);
             }
         }
+        [JsonIgnore]
         public string TimeString
         {
             get
@@ -37,30 +42,21 @@ namespace SWE_TourPlanner_WPF
                 return ToStringHelpers.DurationInSecondsToString(Time);
             }
         }
+        [JsonIgnore]
         public EDifficulty ChildFriendliness
         {
             get
             {
-                double avgTourLogDifficulty = (int)EDifficulty.Medium;
-                double avgTourLogDistance = Distance;
-                double avgTourLogTime = Time;
-                if (TourLogs != null && TourLogs.Count > 0)
-                {
-                    avgTourLogDifficulty = TourLogs.Sum<TourLog>(l => (int)l.Difficulty) / TourLogs.Count;
-                    avgTourLogDistance = TourLogs.Sum<TourLog>(l => l.TotalDistance) / TourLogs.Count;
-                    avgTourLogTime = TourLogs.Sum<TourLog>(l => l.TotalTime) / TourLogs.Count;
-                }
-
                 double typeMod = ((int)TransportType + 1)/  (int)ETransportType.Foot;
 
                 // Every Step = 1 Points
-                double pointsDifficulty = avgTourLogDifficulty+1;
+                double pointsDifficulty = AvgTourLogDiffiuly+1;
 
                 // Every 10km = 1 Point
-                double pointsDistance = avgTourLogDistance * typeMod / 1000 / 10;
+                double pointsDistance = AvgTourLogTotalDistance * typeMod / 1000 / 10;
 
                 // Every 2h = 1 Point
-                double pointsTime = avgTourLogTime * typeMod / 3600 / 2;
+                double pointsTime = AvgTourLogTotalTime * typeMod / 3600 / 2;
 
                 int intChildFriendliness = (int)((pointsDifficulty * 0.5 + pointsDistance * 0.25 + pointsTime * 0.25));
 
@@ -72,11 +68,64 @@ namespace SWE_TourPlanner_WPF
                 return (EDifficulty)intChildFriendliness;
             }
         }
+        [JsonIgnore]
         public int Popularity
         {
             get
             {
                 return TourLogs != null ? TourLogs.Count : 0;
+            }
+        }
+        [JsonIgnore]
+        public double AvgTourLogDiffiuly
+        {
+            get
+            {
+                double avgTourLogDifficulty = (int)EDifficulty.Medium;
+                if (TourLogs != null && TourLogs.Count > 0)
+                {
+                    avgTourLogDifficulty = TourLogs.Sum<TourLog>(l => (int)l.Difficulty) / TourLogs.Count;
+                }
+                return avgTourLogDifficulty;
+            }
+        }
+        [JsonIgnore]
+        public double AvgTourLogTotalDistance
+        {
+            get
+            {
+                double avgTourLogDistance = Distance;
+                if (TourLogs != null && TourLogs.Count > 0)
+                {
+                    avgTourLogDistance = TourLogs.Sum<TourLog>(l => l.TotalDistance) / TourLogs.Count;
+                }
+                return avgTourLogDistance;
+            }
+        }
+        [JsonIgnore]
+        public double AvgTourLogTotalTime
+        {
+            get
+            {
+                double avgTourLogTime = Time;
+                if (TourLogs != null && TourLogs.Count > 0)
+                {
+                    avgTourLogTime = TourLogs.Sum<TourLog>(l => l.TotalTime) / TourLogs.Count;
+                }
+                return avgTourLogTime;
+            }
+        }
+        [JsonIgnore]
+        public double AvgTourLogRating
+        {
+            get
+            {
+                double avgTourLogRating = (int)ERating.ZeroStars;
+                if (TourLogs != null && TourLogs.Count > 0)
+                {
+                    avgTourLogRating = TourLogs.Sum<TourLog>(l => (int)l.Rating) / TourLogs.Count;
+                }
+                return avgTourLogRating;
             }
         }
 

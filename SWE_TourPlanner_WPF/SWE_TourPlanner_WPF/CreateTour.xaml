@@ -27,8 +27,8 @@
 
         <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="3">
             <Label Content="Transport Type:"/>
-            <RadioButton x:Name="rbtn_TransportType_Bike" Content="Bike" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Bike}}"/>
             <RadioButton x:Name="rbtn_TransportType_Car" Content="Car" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Car}}"/>
+            <RadioButton x:Name="rbtn_TransportType_Bike" Content="Bike" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Bike}}"/>
             <RadioButton x:Name="rbtn_TransportType_Foot" Content="Foot" IsChecked="{Binding SelectedTour.TransportType, Converter={StaticResource ETransportTypeConverter}, ConverterParameter={x:Static local:ETransportType.Foot}}"/>
         </StackPanel>
         <Button x:Name="btn_CreateTour" Click="btn_CreateTour_Click" Command="{Binding CreateTourCommand}" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6">Create Tour</Button>

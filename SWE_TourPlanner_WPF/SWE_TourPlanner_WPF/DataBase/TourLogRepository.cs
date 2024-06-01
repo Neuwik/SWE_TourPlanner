@@ -10,6 +10,7 @@ namespace SWE_TourPlanner_WPF.DataBase
         }
         
         protected override DbSet<TourLog> Table => Context.TourLogs;
+        public TourLog GetLast() => Table.OrderBy(t => t.Id).LastOrDefault();
         public TourLog GetOneEager(int id) => Table.Include(t => t.Tour).ToList().Find(t => id == t.Id)!;
         public override int Update(TourLog newTourLog)
         {

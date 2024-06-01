@@ -2,16 +2,18 @@
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
-using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using SWE_TourPlanner_WPF.BusinessLayer.MapHelpers;
 using SWE_TourPlanner_WPF.DataBase;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
-using System.Windows.Navigation;
-using static Org.BouncyCastle.Math.EC.ECCurve;
+using System.Windows.Input;
+using System.Windows.Forms;
+using Microsoft.VisualBasic.Logging;
 
 namespace SWE_TourPlanner_WPF.BusinessLayer
 {
@@ -20,6 +22,8 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
         private DatabaseHandler _DatabaseHandler;
 
         private string _reportPath;
+        private string _exportPath;
+        private string _importPath;
         private string _apiKey;
 
         public BusinessLayer()
@@ -29,6 +33,8 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 string json = File.ReadAllText(TourPlannerConfig.ConfigFile);
                 TourPlannerConfig config = JsonConvert.DeserializeObject<TourPlannerConfig>(json);
                 _reportPath = config.BusinessLayer.ReportFolderPath;
+                _exportPath = config.BusinessLayer.ExportFolderPath;
+                _importPath = config.BusinessLayer.ImportFolderPath;
                 _apiKey = config.BusinessLayer.ORS_ApiKey;
             }
             catch (Exception)
@@ -60,23 +66,21 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
 
                 //throw new BLLNotImplementedException("Add Tour");
 
-                //Make a new Tour with incoming Information
-                Tour newTour = new Tour(tour);
-
-
                 //Calculate Route
-                await CalculateRoute(newTour);
+                await CalculateRoute(tour);
 
                 //Add Tour to DB -> here only Mock
                 /*newTour.Id = Mock_GetNextTourId();
                 mock_tours.Add(newTour);*/
 
-                _DatabaseHandler.AddTour(newTour);
+                _DatabaseHandler.AddTour(new Tour(tour));
 
-                IBusinessLayer.logger.Debug($"Tour {newTour} was added.");
+                Tour dbTour = _DatabaseHandler.GetLastTour();
+
+                IBusinessLayer.logger.Debug($"Tour {dbTour} was added.");
 
                 //Return Copy of added Tour
-                return new Tour(newTour);
+                return new Tour(dbTour);
             }
             catch (BusinessLayerException e)
             {
@@ -97,21 +101,20 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 IBusinessLayer.logger.Debug($"Trying to add TourLog {log} to Tour {tour}.");
                 //throw new BLLNotImplementedException("Add Tour Log");
 
-                //Make a new TourLog with incoming Information
-                TourLog newLog = new TourLog(log);
-
                 // Check if Tour exists
                 Tour dbTour = GetExistingTour(tour.Id);
 
                 //Set Tour Id
-                newLog.TourId = dbTour.Id;
+                log.TourId = dbTour.Id;
 
                 //Add TourLog to DB
-                _DatabaseHandler.AddTourLog(newLog);
+                _DatabaseHandler.AddTourLog(new TourLog(log));
 
-                IBusinessLayer.logger.Debug($"TourLog {newLog} was added to Tour {dbTour}.");
+                TourLog dbLog = _DatabaseHandler.GetLastTourLog();
+
+                IBusinessLayer.logger.Debug($"TourLog {dbLog} was added to Tour {dbTour}.");
                 //Return Copy of added TourLog
-                return new TourLog(newLog);
+                return new TourLog(dbLog);
             }
             catch (BusinessLayerException e)
             {
@@ -125,18 +128,12 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             }
         }
 
-        public async Task<List<Tour>> GetAllTours()
+        public List<Tour> GetAllTours()
         {
             try
             {
                 IBusinessLayer.logger.Debug($"Trying to get all Tours.");
                 //throw new BLLNotImplementedException("Get All Tours");
-
-                // Seed Data if DB Empty
-                if (_DatabaseHandler.GetAllTours().Count <= 0)
-                {
-                    await SeedData();
-                }
 
                 // Return List of Copies
                 List<Tour> tours = new List<Tour>();
@@ -286,6 +283,8 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                     RemoveTourLog(temp);
                 }
 
+                dbTour = GetExistingTour(tour.Id);
+
                 IBusinessLayer.logger.Debug($"Updated Tour {dbTour}.");
                 return new Tour(dbTour);
             }
@@ -345,7 +344,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                     Directory.CreateDirectory(filePath);
                 }
 
-                string fileName = $"{dbTour.Id} - {DateTime.UtcNow.ToString("yyyy_MM_dd_HH_mm_ss")} - {dbTour.Name}";
+                string fileName = $"{dbTour.Id}-{DateTime.UtcNow.ToString("yyyy_MM_dd_HH_mm_ss")}-{dbTour.Name}";
                 string filePathAndName = System.IO.Path.Combine(filePath, $"{fileName}.pdf");
                 int index = 1;
 
@@ -376,17 +375,17 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 List tourInfo = new List()
                     .SetSymbolIndent(12)
                     .SetListSymbol("\u2022");
-                tourInfo.Add(new ListItem("Id: " + tour.Id));
-                tourInfo.Add(new ListItem("Name: " + tour.Name));
-                tourInfo.Add(new ListItem("Description: " + tour.Description));
-                tourInfo.Add(new ListItem("From: " + tour.From));
-                tourInfo.Add(new ListItem("To: " + tour.To));
-                tourInfo.Add(new ListItem("Transport Type: " + tour.TransportType.ToString()));
-                tourInfo.Add(new ListItem("Distance: " + tour.DistanceString));
-                tourInfo.Add(new ListItem("Time: " + tour.TimeString));
-                tourInfo.Add(new ListItem("Tour Logs Count: " + tour.TourLogs.Count));
-                tourInfo.Add(new ListItem("Popularity: " + tour.Popularity));
-                tourInfo.Add(new ListItem("Child-Friendliness: " + tour.ChildFriendliness.ToString()));
+                tourInfo.Add(new ListItem("Id: " + dbTour.Id));
+                tourInfo.Add(new ListItem("Name: " + dbTour.Name));
+                tourInfo.Add(new ListItem("Description: " + dbTour.Description));
+                tourInfo.Add(new ListItem("From: " + dbTour.From));
+                tourInfo.Add(new ListItem("To: " + dbTour.To));
+                tourInfo.Add(new ListItem("Transport Type: " + dbTour.TransportType.ToString()));
+                tourInfo.Add(new ListItem("Distance: " + dbTour.DistanceString));
+                tourInfo.Add(new ListItem("Time: " + dbTour.TimeString));
+                tourInfo.Add(new ListItem("Tour Logs Count: " + dbTour.TourLogs.Count));
+                tourInfo.Add(new ListItem("Popularity: " + dbTour.Popularity));
+                tourInfo.Add(new ListItem("Child-Friendliness: " + dbTour.ChildFriendliness.ToString()));
                 document.Add(tourInfo);
 
                 document.Add(new Paragraph());
@@ -429,14 +428,14 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                     .SetBold();
                 document.Add(routeInfoHeader);
 
-                Paragraph routeInfo = new Paragraph(tour.RouteInformation)
+                Paragraph routeInfo = new Paragraph(dbTour.RouteInformation)
                     .SetFontSize(12);
                 document.Add(routeInfo);
 
 
                 document.Close();
 
-                IBusinessLayer.logger.Debug($"Printed report for Tour {dbTour}.");
+                IBusinessLayer.logger.Debug($"Printed report for Tour {dbTour} to {filePathAndName}.");
                 return new Tour(dbTour);
             }
             catch (BusinessLayerException e)
@@ -447,6 +446,187 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             catch (Exception e)
             {
                 IBusinessLayer.logger.Error($"Printing report for Tour {tour} failed: {e.ToString()}");
+                throw new BusinessLayerException(e.Message);
+            }
+        }
+
+        public Tour PrintSummarizedReportPDF(Tour tour)
+        {
+            try
+            {
+                IBusinessLayer.logger.Debug($"Trying to print summarized report for Tour {tour}.");
+
+                Tour dbTour = GetExistingTour(tour.Id);
+
+                string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                string filePath = System.IO.Path.Combine(appDir, _reportPath);
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fileName = $"{dbTour.Id}-{DateTime.UtcNow.ToString("yyyy_MM_dd_HH_mm_ss")}-Summarized-{dbTour.Name}";
+                string filePathAndName = System.IO.Path.Combine(filePath, $"{fileName}.pdf");
+                int index = 1;
+
+                while (File.Exists(filePathAndName))
+                {
+                    filePathAndName = System.IO.Path.Combine(filePath, $"{fileName} ({index}).pdf");
+                    index++;
+                }
+
+
+                PdfWriter writer = new PdfWriter(filePathAndName);
+                PdfDocument pdf = new PdfDocument(writer);
+                Document document = new Document(pdf);
+
+                Paragraph header = new Paragraph(fileName)
+                    .SetFontSize(18)
+                    .SetBold()
+                    .SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                document.Add(header);
+
+                document.Add(new Paragraph());
+
+                Paragraph tourInfoHeader = new Paragraph("Tour Info")
+                    .SetFontSize(14)
+                    .SetBold();
+                document.Add(tourInfoHeader);
+
+                List tourInfo = new List()
+                    .SetSymbolIndent(12)
+                    .SetListSymbol("\u2022");
+                tourInfo.Add(new ListItem("Id: " + dbTour.Id));
+                tourInfo.Add(new ListItem("Name: " + dbTour.Name));
+                tourInfo.Add(new ListItem("Description: " + dbTour.Description));
+                tourInfo.Add(new ListItem("From: " + dbTour.From));
+                tourInfo.Add(new ListItem("To: " + dbTour.To));
+                tourInfo.Add(new ListItem("Transport Type: " + dbTour.TransportType.ToString()));
+                tourInfo.Add(new ListItem("Distance: " + dbTour.DistanceString));
+                tourInfo.Add(new ListItem("Time: " + dbTour.TimeString));
+                tourInfo.Add(new ListItem("Tour Logs Count: " + dbTour.TourLogs.Count));
+                tourInfo.Add(new ListItem("Popularity: " + dbTour.Popularity));
+                tourInfo.Add(new ListItem("Child-Friendliness: " + dbTour.ChildFriendliness.ToString()));
+
+                tourInfo.Add(new ListItem("Average TourLog Diffiuly: " + dbTour.AvgTourLogDiffiuly.ToString()));
+                tourInfo.Add(new ListItem("Average TourLog Total Distance: " + ToStringHelpers.DistanceInMetersToString(dbTour.AvgTourLogTotalDistance)));
+                tourInfo.Add(new ListItem("Average TourLog Total Time: " + ToStringHelpers.DurationInSecondsToString(dbTour.AvgTourLogTotalTime)));
+                tourInfo.Add(new ListItem("Average TourLog Rating: " + dbTour.AvgTourLogRating.ToString()));
+                
+                document.Add(tourInfo);
+
+                document.Close();
+
+                IBusinessLayer.logger.Debug($"Printed summarized report for Tour {dbTour} to {filePathAndName}.");
+                return new Tour(dbTour);
+            }
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Printing summarized report for Tour {tour} failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Printing summarized report for Tour {tour} failed: {e.ToString()}");
+                throw new BusinessLayerException(e.Message);
+            }
+        }
+
+        public Tour ExportTourToJson(Tour tour)
+        {
+            try
+            {
+                IBusinessLayer.logger.Debug($"Trying to export Tour {tour}.");
+
+                Tour dbTour = GetExistingTour(tour.Id);
+
+                string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                string filePath = System.IO.Path.Combine(appDir, _exportPath);
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fileName = $"{dbTour.Id}-{DateTime.UtcNow.ToString("yyyy_MM_dd_HH_mm_ss")}-{dbTour.Name}";
+                string filePathAndName = System.IO.Path.Combine(filePath, $"{fileName}.json");
+                int index = 1;
+
+                while (File.Exists(filePathAndName))
+                {
+                    filePathAndName = System.IO.Path.Combine(filePath, $"{fileName} ({index}).json");
+                    index++;
+                }
+
+                string jsonString = System.Text.Json.JsonSerializer.Serialize(dbTour);
+                File.WriteAllText(filePathAndName, jsonString);
+
+                IBusinessLayer.logger.Debug($"Exported Tour {dbTour} to {filePathAndName}.");
+                return new Tour(dbTour);
+            }
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Exporting Tour {tour} failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Exporting Tour {tour} failed: {e.ToString()}");
+                throw new BusinessLayerException(e.Message);
+            }
+        }
+
+        public async Task<List<Tour>> ImportToursFromJson()
+        {
+            try
+            {
+                IBusinessLayer.logger.Debug($"Trying to import Tours.");
+
+                string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                string filePath = System.IO.Path.Combine(appDir, _importPath);
+
+                if (!Directory.Exists(filePath))
+                {
+                    throw new BusinessLayerException($"Import Folder ({filePath}) does not exist");
+                }
+
+                var jsonFiles = Directory.GetFiles(filePath, "*.json");
+                List<Tour> tours = new List<Tour>();
+                foreach (var jsonFile in jsonFiles)
+                {
+                    if (!File.Exists(jsonFile))
+                    {
+                        throw new BusinessLayerException($"Import File ({jsonFile}) does not exist");
+                    }
+
+                    string jsonString = File.ReadAllText(jsonFile);
+
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                    Tour tour = System.Text.Json.JsonSerializer.Deserialize<Tour>(jsonString);
+
+                    if (tour.AreAllInputParamsSet())
+                    {
+                        tours.Add(await AddTour(tour));
+                    }
+                }
+
+                IBusinessLayer.logger.Debug($"Imported {tours.Count} Tours from {filePath}.");
+                
+                return tours;
+            }
+            catch (BusinessLayerException e)
+            {
+                IBusinessLayer.logger.Error($"Importing Tours failed: {e}");
+                throw;
+            }
+            catch (Exception e)
+            {
+                IBusinessLayer.logger.Error($"Importing Tours failed: {e.ToString()}");
                 throw new BusinessLayerException(e.Message);
             }
         }
@@ -549,6 +729,7 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
             }
         }
 
+        /*
         private async Task SeedData()
         {
             for (int i = 1; i < 4; i++)
@@ -563,5 +744,6 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
                 });
             }
         }
+        */
     }
 }

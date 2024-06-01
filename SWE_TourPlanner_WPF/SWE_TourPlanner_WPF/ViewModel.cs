@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -130,6 +131,33 @@ namespace SWE_TourPlanner_WPF
             }
         }
 
+        private ICommandHandler _printTourSummarizedReportCommand;
+        public ICommandHandler PrintTourSummarizedReportCommand
+        {
+            get
+            {
+                return _printTourSummarizedReportCommand ?? (_printTourSummarizedReportCommand = new ICommandHandler(() => PrintTourSummarizedReport(), () => IsTourSelected));
+            }
+        }
+
+        private ICommandHandler _exportTourToJsonCommand;
+        public ICommandHandler ExportTourToJsonCommand
+        {
+            get
+            {
+                return _exportTourToJsonCommand ?? (_exportTourToJsonCommand = new ICommandHandler(() => ExportTourToJson(), () => IsTourSelected));
+            }
+        }
+
+        private ICommandHandler _importToursFromJsonCommand;
+        public ICommandHandler ImportToursFromJsonCommand
+        {
+            get
+            {
+                return _importToursFromJsonCommand ?? (_importToursFromJsonCommand = new ICommandHandler(() => ImportToursFromJson(), () => true));
+            }
+        }
+
         private ICommandHandler _reloadToursCommand;
         public ICommandHandler ReloadToursCommand
         {
@@ -175,7 +203,8 @@ namespace SWE_TourPlanner_WPF
             try
             {
                 SelectedTour = await IBusinessLayer.Instance.AddTour(SelectedTour);
-                await ReloadTours();
+                MessageBox.Show($"Tour {SelectedTour.Name} has been added.");
+                ReloadTours();
             }
             catch (Exception e)
             {
@@ -183,12 +212,13 @@ namespace SWE_TourPlanner_WPF
             }
         }
 
-        public async Task UpdateTour()
+        public void UpdateTour()
         {
             try
             {
                 SelectedTour = IBusinessLayer.Instance.UpdateTour(SelectedTour);
-                await ReloadTours();
+                MessageBox.Show($"Tour {SelectedTour.Name} has been updated.");
+                ReloadTours();
             }
             catch (Exception e)
             {
@@ -196,14 +226,15 @@ namespace SWE_TourPlanner_WPF
             }
         }
 
-        public async Task DeleteTour()
+        public void DeleteTour()
         {
             if (SelectedTour != null)
             {
                 try
                 {
                     SelectedTour = IBusinessLayer.Instance.RemoveTour(SelectedTour);
-                    await ReloadTours();
+                    MessageBox.Show($"Tour {SelectedTour.Name} has been deleted.");
+                    ReloadTours();
                 }
                 catch (Exception e)
                 {
@@ -212,14 +243,15 @@ namespace SWE_TourPlanner_WPF
             }
         }
 
-        public async Task PrintTourReport()
+        public void PrintTourReport()
         {
             if (SelectedTour != null)
             {
                 try
                 {
                     SelectedTour = IBusinessLayer.Instance.PrintReportPDF(SelectedTour);
-                    await ReloadTours();
+                    MessageBox.Show($"Tour {SelectedTour.Name}: Report has been printed.");
+                    ReloadTours();
                 }
                 catch (Exception e)
                 {
@@ -228,26 +260,78 @@ namespace SWE_TourPlanner_WPF
             }
         }
 
-        public async Task ReloadTours()
+        public void PrintTourSummarizedReport()
+        {
+            if (SelectedTour != null)
+            {
+                try
+                {
+                    SelectedTour = IBusinessLayer.Instance.PrintSummarizedReportPDF(SelectedTour);
+                    MessageBox.Show($" {SelectedTour.Name}: Summarized Report has been printed.");
+                    ReloadTours();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
+            }
+        }
+
+        public void ExportTourToJson()
+        {
+            if (SelectedTour != null)
+            {
+                try
+                {
+                    SelectedTour = IBusinessLayer.Instance.ExportTourToJson(SelectedTour);
+                    MessageBox.Show($"Tours has been exported.");
+                    ReloadTours();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
+            }
+        }
+
+        public async Task ImportToursFromJson()
         {
             try
             {
-                Tour tour = null;
-                AllTours = new ObservableCollection<Tour>(await IBusinessLayer.Instance.GetAllTours());
+                List<Tour> importedTours = await IBusinessLayer.Instance.ImportToursFromJson();
+                MessageBox.Show($"{importedTours.Count} Tours have been imported.");
+                ReloadTours();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
 
+        public void ReloadTours()
+        {
+            try
+            {
+                Tour prevSelectedTour = null;
                 if (SelectedTour != null)
                 {
-                    tour = AllTours.ToList().Find(t => t.Id == SelectedTour.Id);
+                    prevSelectedTour = new Tour(SelectedTour);
                 }
+                AllTours = new ObservableCollection<Tour>(IBusinessLayer.Instance.GetAllTours());
 
-                if (SelectedTour == null || tour == null)
+                //reapply filter
+                SearchFilter = SearchFilter;
+
+                if (prevSelectedTour != null)
                 {
-                    tour = AllTours.FirstOrDefault();
+                    SelectedTour = FilteredTours.ToList().Find(t => t.Id == prevSelectedTour.Id);
                 }
-                
-                SelectedTour = tour;
 
-                OnPropertyChanged(nameof(FilteredTours));
+                if (SelectedTour == null || prevSelectedTour == null)
+                {
+                    SelectedTour = FilteredTours.FirstOrDefault();
+                }
+
             }
             catch (Exception e)
             {

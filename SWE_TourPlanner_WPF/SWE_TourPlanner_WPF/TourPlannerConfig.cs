@@ -24,6 +24,8 @@ namespace SWE_TourPlanner_WPF
     public class BusinessLayerConfig
     {
         public string ReportFolderPath { get; set; }
+        public string ExportFolderPath { get; set; }
+        public string ImportFolderPath { get; set; }
         public string ORS_ApiKey { get; set; }
     }
 

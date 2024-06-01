@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         xmlns:local="clr-namespace:SWE_TourPlanner_WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="1000">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
@@ -15,6 +15,9 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
@@ -32,10 +35,13 @@
         <Button x:Name="btn_CreateTour" Grid.Column="0" Grid.Row="0" Click="btn_CreateTour_Click" Command="{Binding OpenCreateWindow}">Create Tour</Button>
         <Button x:Name="btn_DeleteTour" Grid.Column="1" Grid.Row="0" Command="{Binding DeleteTourCommand}">Delete Tour</Button>
         <Button x:Name="btn_UpdateTour" Grid.Column="2" Grid.Row="0" Command="{Binding UpdateTourCommand}">Update Tour</Button>
-        <Button x:Name="btn_PrintTourReport" Grid.Column="3" Grid.Row="0" Command="{Binding PrintTourReportCommand}">Print Tour Report</Button>
-        <Button x:Name="btn_ReloadTours" Grid.Column="4" Grid.Row="0" Command="{Binding ReloadToursCommand}">Reload Tours</Button>
+        <Button x:Name="btn_PrintTourReport" Grid.Column="3" Grid.Row="0" Command="{Binding PrintTourReportCommand}">Print Report</Button>
+        <Button x:Name="btn_PrintTourSummarizedReport" Grid.Column="4" Grid.Row="0" Command="{Binding PrintTourSummarizedReportCommand}">Print Sum. Report</Button>
+        <Button x:Name="btn_ExportTourToJson" Grid.Column="5" Grid.Row="0" Command="{Binding ExportTourToJsonCommand}">Export Tour</Button>
+        <Button x:Name="btn_ImportToursFromJson" Grid.Column="6" Grid.Row="0" Command="{Binding ImportToursFromJsonCommand}">Import Tours</Button>
+        <Button x:Name="btn_ReloadTours" Grid.Column="7" Grid.Row="0" Command="{Binding ReloadToursCommand}">Reload Tours</Button>
 
-        <Grid Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="4">
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
                 <RowDefinition />
@@ -55,7 +61,7 @@
             </ListView>
         </Grid>
 
-        <TabControl Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="2" IsEnabled="{Binding IsTourSelected}">
+        <TabControl Grid.Column="2" Grid.ColumnSpan="6" Grid.Row="1" Grid.RowSpan="2" IsEnabled="{Binding IsTourSelected}">
             <TabItem Header="General">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -115,7 +121,7 @@
             </TabItem>
         </TabControl>
 
-        <DataGrid Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="3" Grid.RowSpan="2" AutoGenerateColumns="False" ItemsSource="{Binding SelectedTour.TourLogs, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTourSelected}">
+        <DataGrid Grid.Column="2" Grid.ColumnSpan="6" Grid.Row="3" Grid.RowSpan="2" AutoGenerateColumns="False" ItemsSource="{Binding SelectedTour.TourLogs, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTourSelected}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="DateTime (UTC)" Binding="{Binding DateTime}"/>
                 <DataGridTextColumn Header="TotalDistance (in Meters)" Binding="{Binding TotalDistance}"/>

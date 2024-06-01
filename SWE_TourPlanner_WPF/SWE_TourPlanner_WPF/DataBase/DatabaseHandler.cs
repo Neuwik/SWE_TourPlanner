@@ -80,27 +80,44 @@ namespace SWE_TourPlanner_WPF.DataBase
         {
             return _TourLogRepo.GetAll().Where(t => t.TourId == TourId).ToList();
         }
+        public Tour GetLastTour()
+        {
+            return _TourRepo.GetLast();
+        }
+        public TourLog GetLastTourLog()
+        {
+            return _TourLogRepo.GetLast();
+        }
 
         // WRITE Functions:
         public int AddTour(Tour tour)
         {
-            if(_TourRepo.Add(tour) <= 0)
+            tour.Id = 0;
+
+            List<TourLog> logs = tour.TourLogs.ToList();
+            tour.TourLogs = new List<TourLog>();
+
+            if (_TourRepo.Add(tour) <= 0)
             {
                 return 0;
             }
             
-            if (tour.TourLogs.Count > 0)
+            if (logs.Count > 0)
             {
-                foreach (TourLog tourLog in tour.TourLogs)
+                foreach (TourLog tourLog in logs)
                 {
+                    tourLog.TourId = tour.Id;
                     AddTourLog(tourLog);
                 }
             }
+            tour.TourLogs = logs;
+
             return 1;
         }
 
         public int AddTourLog(TourLog tourLog)
         {
+            tourLog.Id = 0;
             return _TourLogRepo.Add(tourLog);
         }
 
