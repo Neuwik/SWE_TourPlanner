@@ -113,6 +113,7 @@ namespace SWE_TourPlanner_WPF
                 TourLogs.Add(new TourLog(tourLog));
             }
         }
+        
         public void Update(Tour newTour)
         {
             Name = newTour.Name;
@@ -155,6 +156,15 @@ namespace SWE_TourPlanner_WPF
         public override string ToString()
         {
             return $"Tour Id: {Id}, Name: {Name}, Description: {Description}, From: {From}, To: {To}, Transport Type: {TransportType}, Distance: {DistanceString}, Time: {TimeString}, Tour Logs Count: {TourLogs.Count}, Popularity: {Popularity}, Child-Friendliness: {ChildFriendliness}";
+        }
+
+        public bool ContainsFilter(string filter)
+        {
+            if (String.IsNullOrEmpty(filter))
+            {
+                return true;
+            }
+            return ToString().Contains(filter);
         }
     }
 }

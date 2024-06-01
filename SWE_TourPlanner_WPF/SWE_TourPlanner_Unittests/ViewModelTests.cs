@@ -16,12 +16,12 @@ namespace SWE_TourPlanner_Unittests
         public void AddTour_AddsTourToListAndClearsTempTour()
         {
             var viewModel = new ViewModel();
-            var initialCount = viewModel.Tours.Count;
+            var initialCount = viewModel.AllTours.Count;
 
             viewModel.SelectedTour = new Tour {};
             viewModel.AddTour();
 
-            ClassicAssert.AreEqual(initialCount + 1, viewModel.Tours.Count);
+            ClassicAssert.AreEqual(initialCount + 1, viewModel.AllTours.Count);
             ClassicAssert.IsNotNull(viewModel.SelectedTour);
         }
 
@@ -29,13 +29,13 @@ namespace SWE_TourPlanner_Unittests
         public void DeleteTour_RemovesSelectedTourFromList()
         {
             var viewModel = new ViewModel();
-            viewModel.Tours.Add(new Tour {});
-            var initialCount = viewModel.Tours.Count;
-            viewModel.SelectedTour = viewModel.Tours[0];
+            viewModel.AllTours.Add(new Tour {});
+            var initialCount = viewModel.AllTours.Count;
+            viewModel.SelectedTour = viewModel.AllTours[0];
 
             viewModel.DeleteTour();
 
-            ClassicAssert.AreEqual(initialCount - 1, viewModel.Tours.Count);
+            ClassicAssert.AreEqual(initialCount - 1, viewModel.AllTours.Count);
             ClassicAssert.IsNull(viewModel.SelectedTour);
         }
     }

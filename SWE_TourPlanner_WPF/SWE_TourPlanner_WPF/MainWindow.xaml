@@ -35,13 +35,25 @@
         <Button x:Name="btn_PrintTourReport" Grid.Column="3" Grid.Row="0" Command="{Binding PrintTourReportCommand}">Print Tour Report</Button>
         <Button x:Name="btn_ReloadTours" Grid.Column="4" Grid.Row="0" Command="{Binding ReloadToursCommand}">Reload Tours</Button>
 
-        <ListView Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="4" ItemsSource="{Binding Tours}" SelectedItem="{Binding SelectedTour}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Tours" DisplayMemberBinding="{Binding Name}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <Grid Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0" LastChildFill="True">
+                <Label Content="Search:"/>
+                <TextBox VerticalContentAlignment="Center" Text="{Binding SearchFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </DockPanel>
+
+            <ListView Grid.Row="1" ItemsSource="{Binding FilteredTours}" SelectedItem="{Binding SelectedTour}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Tours" DisplayMemberBinding="{Binding Name}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
 
         <TabControl Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="2" IsEnabled="{Binding IsTourSelected}">
             <TabItem Header="General">

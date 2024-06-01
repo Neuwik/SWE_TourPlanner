@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Web.WebView2.Core;
+using Newtonsoft.Json;
 using SWE_TourPlanner_WPF.BusinessLayer;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -21,7 +23,27 @@ namespace SWE_TourPlanner_WPF
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<Tour> Tours { get; set; }
+        public ObservableCollection<Tour> AllTours{ get; set; }
+
+        private string _searchFilter;
+        public string SearchFilter
+        {
+            get { return _searchFilter; }
+            set
+            {
+                _searchFilter = value;
+                OnPropertyChanged(nameof(SearchFilter));
+                OnPropertyChanged(nameof(FilteredTours));
+            }
+        }
+
+        public ObservableCollection<Tour> FilteredTours
+        {
+            get
+            {
+                return new ObservableCollection<Tour>(AllTours.Where(t => t.ContainsFilter(SearchFilter)).OrderByDescending(t => t.Popularity));
+            }
+        }
 
         private Tour _selectedTour;
         public Tour SelectedTour
@@ -60,7 +82,7 @@ namespace SWE_TourPlanner_WPF
 
         public bool IsTourSelected
         {
-            get { return SelectedTour != null && Tours.Contains(SelectedTour); }
+            get { return SelectedTour != null && AllTours.Contains(SelectedTour); }
         }
 
         private ICommandHandler _openCreateWindow;
@@ -133,7 +155,9 @@ namespace SWE_TourPlanner_WPF
                 throw new Exception("ViewModel could not read config file.");
             }
 
-            Tours = new ObservableCollection<Tour> { };
+            AllTours = new ObservableCollection<Tour> { };
+
+            ReloadTours();
         }
 
         public bool SelectedTourIsNotEmpty()
@@ -209,27 +233,21 @@ namespace SWE_TourPlanner_WPF
             try
             {
                 Tour tour = null;
-                Tours = new ObservableCollection<Tour>(await IBusinessLayer.Instance.GetAllTours());
+                AllTours = new ObservableCollection<Tour>(await IBusinessLayer.Instance.GetAllTours());
 
                 if (SelectedTour != null)
                 {
-                    tour = Tours.ToList().Find(t => t.Id == SelectedTour.Id);
+                    tour = AllTours.ToList().Find(t => t.Id == SelectedTour.Id);
                 }
 
                 if (SelectedTour == null || tour == null)
                 {
-                    tour = Tours.FirstOrDefault();
+                    tour = AllTours.FirstOrDefault();
                 }
-
-                /*
-                 * Loaded anyways
-                if (tour != null)
-                {
-                    tour.TourLogs = IBusinessLayer.Instance.GetAllTourLogsOfTour(tour);
-                }
-                */
                 
                 SelectedTour = tour;
+
+                OnPropertyChanged(nameof(FilteredTours));
             }
             catch (Exception e)
             {
@@ -237,7 +255,7 @@ namespace SWE_TourPlanner_WPF
             }
             finally
             {
-                OnPropertyChanged(nameof(Tours));
+                OnPropertyChanged(nameof(AllTours));
                 SelectedTourChanged();
             }
         }
@@ -250,7 +268,8 @@ namespace SWE_TourPlanner_WPF
                 string appDir = AppDomain.CurrentDomain.BaseDirectory;
                 string filePath = System.IO.Path.Combine(appDir, DirectionsFilePath);
                 File.WriteAllText(filePath, directionsContent);
-                UpdateMap();
+                if (UpdateMap != null)
+                    UpdateMap();
             }
         }
 
