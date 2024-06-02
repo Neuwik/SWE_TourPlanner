@@ -191,7 +191,7 @@ namespace SWE_TourPlanner_Unittests
         }
 
         [Test]
-        public void Test_Tour_AvgTourLogDiffiuly_CheckCorrectCalculation()
+        public void Test_Tour_AvgTourLogDifficulty_CheckCorrectCalculation()
         {
             var tourLogs = new List<TourLog>
             {
