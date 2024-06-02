@@ -53,28 +53,28 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SWE_TourPlanner_WPF.Models.TourPlannerConfig">
-    <Position X="25.5" Y="5.75" Width="1.75" />
+    <Position X="20.25" Y="11.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAEAAAAAAAAAhEAAAAAAA=</HashCode>
       <FileName>Models\TourPlannerConfig.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SWE_TourPlanner_WPF.Models.DataAccessLayerConfig">
-    <Position X="25.5" Y="8.25" Width="2" />
+    <Position X="20" Y="13.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
       <FileName>Models\TourPlannerConfig.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SWE_TourPlanner_WPF.Models.BusinessLayerConfig">
-    <Position X="23.5" Y="7.25" Width="1.75" />
+    <Position X="20.25" Y="14.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAACAIAAAAAEAAAAAAA=</HashCode>
       <FileName>Models\TourPlannerConfig.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="SWE_TourPlanner_WPF.Models.ViewModelConfig">
-    <Position X="23.5" Y="5.75" Width="1.75" />
+    <Position X="20.25" Y="16.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
       <FileName>Models\TourPlannerConfig.cs</FileName>
@@ -219,7 +219,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="SWE_TourPlanner_WPF.BusinessLayer.Logging.Log4NetWrapper" BaseTypeListCollapsed="true">
-    <Position X="24.25" Y="0.75" Width="1.5" />
+    <Position X="22" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAIAAAAAAAYACAAAAAAAAAAAAAAEAAAAAAAAEAAA=</HashCode>
       <FileName>BusinessLayer\Logging\Log4NetWrapper.cs</FileName>
@@ -227,7 +227,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="SWE_TourPlanner_WPF.BusinessLayer.Logging.LoggerFactory">
-    <Position X="26" Y="2.5" Width="1.75" />
+    <Position X="21.75" Y="5.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>BusinessLayer\Logging\LoggerFactory.cs</FileName>
@@ -241,7 +241,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="SWE_TourPlanner_WPF.BusinessLayer.Logging.ILoggerWrapper">
-    <Position X="26" Y="0.75" Width="1.5" />
+    <Position X="22" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAYAAAAAAAAAAAAAAAAEAAAAAAAAEAAA=</HashCode>
       <FileName>BusinessLayer\Logging\ILoggerWrapper.cs</FileName>
