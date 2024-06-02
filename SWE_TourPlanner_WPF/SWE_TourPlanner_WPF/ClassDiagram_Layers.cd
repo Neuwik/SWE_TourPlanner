@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SWE_TourPlanner_WPF.ViewLayer.ETransportTypeConverter" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="8.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewLayer\ETransportTypeConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.ViewLayer.ICommandHandler" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEACAAQAAEAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>ViewLayer\ICommandHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.ViewLayer.ViewModel" BaseTypeListCollapsed="true">
+    <Position X="8.5" Y="8.75" Width="3" />
+    <NestedTypes>
+      <Delegate Name="SWE_TourPlanner_WPF.ViewLayer.ViewModel.UpdateMapDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ViewLayer\ViewModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IAQEgAKIKVAJAIKUIAAgABCBgCACgQRBEAgIAAgEAgA=</HashCode>
+      <FileName>ViewLayer\ViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.Models.ToStringHelpers">
+    <Position X="25.25" Y="13.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\ToStringHelpers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.Models.Tour">
+    <Position X="23" Y="13.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgQSAAAUCAQggAAEAAAAAAQAQAAYIgRACAAAAIAAEQA=</HashCode>
+      <FileName>Models\Tour.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.Models.TourLog">
+    <Position X="25.5" Y="15" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQiAAAUAAAAAQAEEAAAAAAAAAAAAAUAAAAEAAAAAAA=</HashCode>
+      <FileName>Models\TourLog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.Models.TourPlannerConfig">
+    <Position X="25.5" Y="5.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAEAAAAAAAAAhEAAAAAAA=</HashCode>
+      <FileName>Models\TourPlannerConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.Models.DataAccessLayerConfig">
+    <Position X="25.5" Y="8.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Models\TourPlannerConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.Models.BusinessLayerConfig">
+    <Position X="23.5" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAACAIAAAAAEAAAAAAA=</HashCode>
+      <FileName>Models\TourPlannerConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.Models.ViewModelConfig">
+    <Position X="23.5" Y="5.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Models\TourPlannerConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.DataAccessLayer.ARepository&lt;R, ID&gt;">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAAiAAAAAAAAAAQAAAAAEAAAAAAgAAAAIkAAA=</HashCode>
+      <FileName>DataAccessLayer\ARepository.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.DataAccessLayer.DatabaseContext">
+    <Position X="7.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAEAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>DataAccessLayer\DatabaseContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.DataAccessLayer.DatabaseHandler" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AECAAAABACBIgoIAAEAAAEAgAAAgAAABACIAAAEIAAA=</HashCode>
+      <FileName>DataAccessLayer\DatabaseHandler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.DataAccessLayer.TourLogRepository">
+    <Position X="0.5" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAIAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>DataAccessLayer\TourLogRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.DataAccessLayer.TourRepository">
+    <Position X="2.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAIAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAQAAAA=</HashCode>
+      <FileName>DataAccessLayer\TourRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.BusinessLayer.BusinessLayer" BaseTypeListCollapsed="true">
+    <Position X="14.5" Y="3" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IAQAQAAAAQBIAAAAAAAgAAEAACAACCoBAEBIAAAICAI=</HashCode>
+      <FileName>BusinessLayer\BusinessLayer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.BusinessLayer.BusinessLayerException" Collapsed="true">
+    <Position X="15.25" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BusinessLayer\BusinessLayerException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.BusinessLayer.BLLNotImplementedException" Collapsed="true">
+    <Position X="18.5" Y="2" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BusinessLayer\BusinessLayerException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.BusinessLayer.BLLConflictException" Collapsed="true">
+    <Position X="11.5" Y="2" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BusinessLayer\BusinessLayerException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.BusinessLayer.BLLServiceUnavailable" Collapsed="true">
+    <Position X="15" Y="2" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BusinessLayer\BusinessLayerException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.DirectionsResult">
+    <Position X="19.5" Y="3" Width="1.5" />
+    <NestedTypes>
+      <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.DirectionsResult.Feature" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>BusinessLayer\MapHelpers\DirectionsResult.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.DirectionsResult.Properties" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>BusinessLayer\MapHelpers\DirectionsResult.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.DirectionsResult.Summary" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>BusinessLayer\MapHelpers\DirectionsResult.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.DirectionsResult.Geometry" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>BusinessLayer\MapHelpers\DirectionsResult.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.DirectionsResult.Segment" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>BusinessLayer\MapHelpers\DirectionsResult.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.DirectionsResult.Step" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>BusinessLayer\MapHelpers\DirectionsResult.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BusinessLayer\MapHelpers\DirectionsResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.GeocodeResult">
+    <Position X="19.5" Y="4.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.GeocodeResult.GeocodeFeature" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>BusinessLayer\MapHelpers\GeocodeResult.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.GeocodeResult.Geometry" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>BusinessLayer\MapHelpers\GeocodeResult.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BusinessLayer\MapHelpers\GeocodeResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.BusinessLayer.MapHelpers.OpenRouteService">
+    <Position X="17" Y="3" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAABAAEAAAAAAAQCAAAAAgAABAAAA=</HashCode>
+      <FileName>BusinessLayer\MapHelpers\OpenRouteService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.BusinessLayer.Logging.Log4NetWrapper" BaseTypeListCollapsed="true">
+    <Position X="24.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAYACAAAAAAAAAAAAAAEAAAAAAAAEAAA=</HashCode>
+      <FileName>BusinessLayer\Logging\Log4NetWrapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SWE_TourPlanner_WPF.BusinessLayer.Logging.LoggerFactory">
+    <Position X="26" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BusinessLayer\Logging\LoggerFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="SWE_TourPlanner_WPF.BusinessLayer.IBusinessLayer">
+    <Position X="12" Y="3" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IAQEQAAAAQBIAAACAAAgAAEAAAAAAAABQAAIAAAICAA=</HashCode>
+      <FileName>BusinessLayer\IBusinessLayer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="SWE_TourPlanner_WPF.BusinessLayer.Logging.ILoggerWrapper">
+    <Position X="26" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAYAAAAAAAAAAAAAAAAEAAAAAAAAEAAA=</HashCode>
+      <FileName>BusinessLayer\Logging\ILoggerWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="SWE_TourPlanner_WPF.Models.EDifficulty">
+    <Position X="24.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAECAAAAAAAAAAAAAAAAgAAAAAAAAAAAAkAAA=</HashCode>
+      <FileName>Models\EDifficulty.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SWE_TourPlanner_WPF.Models.ERating">
+    <Position X="26.75" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAQAAAoAAAAAAAAAAAAAAAYAAAAA=</HashCode>
+      <FileName>Models\ERating.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SWE_TourPlanner_WPF.Models.ETransportType">
+    <Position X="23" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Models\ETransportType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
