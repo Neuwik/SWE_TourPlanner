@@ -12,4 +12,4 @@ Export and Import:
 -) The JSON Export exports a the selected Tour, as a json File, to the "EmportFolderPath" (Config)
 -) The JSON Import imports all the Tours (as a json Files) from the "ImportFolderPath" (Config)
 -) When the Tour already exists (a tour with the same ID) then the JSON Import creates a new Tour.
-
+-) For testing the import we provided 2 Tours (as json files) in the "TestData" Folder.
