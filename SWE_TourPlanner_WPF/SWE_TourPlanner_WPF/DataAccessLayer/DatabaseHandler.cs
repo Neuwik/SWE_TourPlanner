@@ -49,8 +49,18 @@ namespace SWE_TourPlanner_WPF.DataAccessLayer
             _TourLogRepo = new TourLogRepository(_DatabaseContext);
         }
 
+        public DatabaseHandler(DatabaseContext databaseContext)
+        {
+            // For UnitTests ONLY
+            _DatabaseContext = databaseContext;
+
+            _TourRepo = new TourRepository(_DatabaseContext);
+            _TourLogRepo = new TourLogRepository(_DatabaseContext);
+        }
+
         public DatabaseHandler(DatabaseContext databaseContext, TourRepository tourRepo, TourLogRepository tourLogRepo)
         {
+            // For UnitTests ONLY
             _DatabaseContext = databaseContext;
             _TourRepo = tourRepo;
             _TourLogRepo = tourLogRepo;
@@ -140,26 +150,6 @@ namespace SWE_TourPlanner_WPF.DataAccessLayer
         public int DeleteTourLog(TourLog tourLog)
         {
             return _TourLogRepo.Delete(tourLog); 
-        }
-
-        // HELPER Functions:
-        private void SeedData()
-        {
-            for (int i = 1; i < 6; i++)
-            {
-                Tour selectedTour = new Tour()
-                {
-                    Name = $"Name {i}",
-                    Description = $"Desc {i}",
-                    From = $"From {i}",
-                    To = $"To {i}",
-                    TransportType = ETransportType.Car,
-                    Distance = i * 100,
-                    Time = i * 30,
-                    RouteInformation = $"Info {i}"
-                };
-                AddTour(selectedTour);
-            }
         }
     }
 }

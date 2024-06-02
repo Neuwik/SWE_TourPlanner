@@ -7,8 +7,8 @@ namespace SWE_TourPlanner_WPF.DataAccessLayer
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
-        public DbSet<Tour> Tours { get; set; }
-        public DbSet<TourLog> TourLogs { get; set; }
+        public virtual DbSet<Tour> Tours { get; set; }
+        public virtual DbSet<TourLog> TourLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

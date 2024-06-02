@@ -14,24 +14,24 @@ namespace SWE_TourPlanner_WPF.DataAccessLayer
         {
             Context = context;
         }
-        public List<R> GetAll() => Table.ToList();
-        public R GetOne(ID id) => Table.Find(id);
-        public int Add(R entity)
+        public virtual List<R> GetAll() => Table.ToList();
+        public virtual R GetOne(ID id) => Table.Find(id);
+        public virtual int Add(R entity)
         {
             Table.Add(entity);
             return Context.SaveChanges();
         }
-        public int AddRange(IEnumerable<R> entities)
+        public virtual int AddRange(IEnumerable<R> entities)
         {
             Table.AddRange(entities);
             return Context.SaveChanges();
         }
-        public int Delete(R entity)
+        public virtual int Delete(R entity)
         {
             Table.Remove(entity);
             return Context.SaveChanges();
         }
-        public int DeleteRange(IEnumerable<R> entities)
+        public virtual int DeleteRange(IEnumerable<R> entities)
         {
             Table.RemoveRange(entities);
             return Context.SaveChanges();
@@ -40,6 +40,6 @@ namespace SWE_TourPlanner_WPF.DataAccessLayer
         {
             return Context.SaveChanges();
         }
-        public void Dispose() => Context.Dispose();
+        public virtual void Dispose() => Context.Dispose();
     }
 }

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace SWE_TourPlanner_WPF.BusinessLayer
 {
@@ -51,8 +52,12 @@ namespace SWE_TourPlanner_WPF.BusinessLayer
 
         public BusinessLayer(DatabaseHandler databaseHandler)
         {
-            // Used for UnitTests
+            // Used for UnitTests ONLY
             _DatabaseHandler = databaseHandler;
+            _apiKey = "5b3ce3597851110001cf62483a397f95f86441adb7cbf0789ae0d615";
+            _reportPath = "REPORTS";
+            _exportPath = "EXPORTS";
+            _importPath = "IMPORTS";
         }
 
         public async Task<Tour> AddTour(Tour tour)

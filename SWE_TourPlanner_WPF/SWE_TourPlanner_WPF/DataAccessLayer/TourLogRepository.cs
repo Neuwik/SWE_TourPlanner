@@ -11,8 +11,8 @@ namespace SWE_TourPlanner_WPF.DataAccessLayer
         }
         
         protected override DbSet<TourLog> Table => Context.TourLogs;
-        public TourLog GetLast() => Table.OrderBy(t => t.Id).LastOrDefault();
-        public TourLog GetOneEager(int id) => Table.Include(t => t.Tour).ToList().Find(t => id == t.Id)!;
+        public virtual TourLog GetLast() => Table.OrderBy(t => t.Id).LastOrDefault();
+        public virtual TourLog GetOneEager(int id) => Table.Include(t => t.Tour).ToList().Find(t => id == t.Id)!;
         public override int Update(TourLog newTourLog)
         {
             TourLog tourLog = GetOneEager(newTourLog.Id);

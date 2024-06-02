@@ -1,108 +1,254 @@
-﻿using NUnit.Framework;
+﻿using iText.StyledXmlParser.Jsoup.Nodes;
+using Microsoft.EntityFrameworkCore;
 using Moq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using SWE_TourPlanner_WPF.BusinessLayer;
 using SWE_TourPlanner_WPF.DataAccessLayer;
-using System.Linq;
-using NUnit.Framework.Legacy;
 using SWE_TourPlanner_WPF.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace SWE_TourPlanner_Unittests
 {
     [TestFixture]
     public class BusinessLayerTests
     {
-        private Mock<DatabaseHandler> _databaseHandlerMock;
-        private BusinessLayer _businessLayerMock;
+        private DatabaseContext _dbContext;
+        private DatabaseHandler _databaseHandler;
+        private BusinessLayer _businessLayer;
 
         [SetUp]
-        public void Setup()
+        public void SetUp()
         {
-            _databaseHandlerMock = new Mock<DatabaseHandler>();
-            _businessLayerMock = new BusinessLayer(_databaseHandlerMock.Object);
+            var options = new DbContextOptionsBuilder<DatabaseContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .Options;
+
+            _dbContext = new DatabaseContext(options);
+
+            _databaseHandler = new DatabaseHandler(_dbContext);
+            _businessLayer = new BusinessLayer(_databaseHandler);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _dbContext.Database.EnsureDeleted();
+            _dbContext.Dispose();
         }
 
         [Test]
-        public async Task AddTour_AddsTourToDatabase()
+        public async Task Test_BusinessLayer_AddTour()
         {
-            // Arrange
             var tour = new Tour
             {
                 Name = "Test Tour",
-                From = "A",
-                To = "B",
+                Description = "Test Description",
+                From = "1200 Wien",
+                To = "4600 Wels"
+            };
+
+            await _businessLayer.AddTour(tour);
+            var allTour = _businessLayer.GetAllTours();
+            var addedTour = allTour.Last();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(allTour.Count, Is.GreaterThan(0));
+                Assert.That(addedTour.Name, Is.EqualTo(tour.Name));
+                Assert.That(addedTour.Description, Is.EqualTo(tour.Description));
+                Assert.That(addedTour.From, Is.EqualTo(tour.From));
+                Assert.That(addedTour.To, Is.EqualTo(tour.To));
+                Assert.That(addedTour.TransportType, Is.EqualTo(tour.TransportType));
+
+                Assert.That(addedTour.Distance, Is.GreaterThan(0));
+                Assert.That(addedTour.Time, Is.GreaterThan(0));
+                Assert.That(addedTour.RouteInformation, Is.Not.Null.Or.Empty);
+                Assert.That(addedTour.OSMjson, Is.Not.Null.Or.Empty);
+            });
+        }
+
+        [Test]
+        public async Task Test_BusinessLayer_RemoveTour()
+        {
+            var tour = new Tour
+            {
+                Name = "Test Tour",
+                Description = "Test Description",
+                From = "1200 Wien",
+                To = "4600 Wels",
                 TransportType = ETransportType.Car
             };
 
-            // Act
-            var result = await _businessLayerMock.AddTour(tour);
+            await _businessLayer.AddTour(tour);
+            var allTourBefor = _businessLayer.GetAllTours();
+            var addedTour = allTourBefor.Last();
 
-            // Assert
-            _databaseHandlerMock.Verify(d => d.AddTour(It.IsAny<Tour>()), Times.Once);
-            ClassicAssert.NotNull(result);
-            ClassicAssert.AreEqual(tour.Name, result.Name);
+            _businessLayer.RemoveTour(addedTour);
+            var allTourAfter = _businessLayer.GetAllTours();
+
+            Assert.That(allTourAfter.Count, Is.LessThan(allTourBefor.Count));
         }
 
         [Test]
-        public void AddTourLogToTour_AddsTourLogToTour()
+        public async Task Test_BusinessLayer_UpdateTour()
         {
-            // Arrange
-            var tour = new Tour { Id = 1, Name = "Test Tour" };
-            var log = new TourLog { Comment = "Test Log", Difficulty = EDifficulty.Easy };
-
-            // Mock existing tour
-            _databaseHandlerMock.Setup(d => d.GetTour(1)).Returns(tour);
-
-            // Act
-            var result = _businessLayerMock.AddTourLogToTour(tour, log);
-
-            // Assert
-            _databaseHandlerMock.Verify(d => d.AddTourLog(It.IsAny<TourLog>()), Times.Once);
-            ClassicAssert.NotNull(result);
-            ClassicAssert.AreEqual(log.Comment, result.Comment);
-        }
-
-        [Test]
-        public void GetAllTours_ReturnsAllTours()
-        {
-            // Arrange
-            var tours = new List<Tour>
+            var oldTour = new Tour
             {
-                new Tour { Id = 1, Name = "Test Tour 1" },
-                new Tour { Id = 2, Name = "Test Tour 2" }
+                Name = "Old Name",
+                Description = "Old Description",
+                From = "1200 Wien",
+                To = "4600 Wels",
+                TransportType = ETransportType.Car
             };
 
-            _databaseHandlerMock.Setup(d => d.GetAllTours()).Returns(tours);
+            await _businessLayer.AddTour(oldTour);
+            var addedTour = _businessLayer.GetAllTours().Last();
 
-            // Act
-            var result = _businessLayerMock.GetAllTours();
+            var changedTour = new Tour(addedTour);
 
-            // Assert
-            ClassicAssert.AreEqual(tours.Count, result.Count);
-            ClassicAssert.AreEqual(tours[0].Name, result[0].Name);
+            changedTour.Name = "New Name";
+            changedTour.Description = "New Description";
+
+            _businessLayer.UpdateTour(changedTour);
+            var updatedTour = _businessLayer.GetAllTours().Last();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(updatedTour.Name, Is.EqualTo(changedTour.Name));
+                Assert.That(updatedTour.Description, Is.EqualTo(changedTour.Description));
+            });
+        }
+
+
+        [Test]
+        public async Task Test_BusinessLayer_AddTourLogToTour()
+        {
+            var tour = new Tour
+            {
+                Name = "Test Tour",
+                Description = "Test Description",
+                From = "1200 Wien",
+                To = "4600 Wels"
+            };
+
+            await _businessLayer.AddTour(tour);
+            var allTour = _businessLayer.GetAllTours();
+            var addedTour = allTour.Last();
+
+            var tourLog = new TourLog
+            {
+                DateTime = DateTime.Now,
+                Comment = "Test Comment",
+                Difficulty = EDifficulty.Medium,
+                TotalDistance = 10.5,
+                TotalTime = 2.5,
+                Rating = ERating.FourStars
+            };
+
+            _businessLayer.AddTourLogToTour(addedTour, tourLog);
+            var allTourLogs = _businessLayer.GetAllTourLogsOfTour(addedTour);
+            var addedTourLog = allTourLogs.Last();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(addedTourLog.TourId, Is.EqualTo(addedTour.Id));
+
+                Assert.That(addedTourLog.Comment, Is.EqualTo(tourLog.Comment));
+                Assert.That(addedTourLog.Difficulty, Is.EqualTo(tourLog.Difficulty));
+                Assert.That(addedTourLog.TotalDistance, Is.EqualTo(tourLog.TotalDistance));
+                Assert.That(addedTourLog.TotalTime, Is.EqualTo(tourLog.TotalTime));
+                Assert.That(addedTourLog.Rating, Is.EqualTo(tourLog.Rating));
+                Assert.That(addedTourLog.DateTime, Is.EqualTo(tourLog.DateTime.ToUniversalTime()));
+            });
         }
 
         [Test]
-        public void GetAllTourLogsOfTour_ReturnsAllLogs()
+        public async Task Test_BusinessLayer_RemoveTourLog()
         {
-            // Arrange
-            var tour = new Tour { Id = 1, Name = "Test Tour" };
-            var logs = new List<TourLog>
+            var tour = new Tour
             {
-                new TourLog { Id = 1, Comment = "Log 1", TourId = 1 },
-                new TourLog { Id = 2, Comment = "Log 2", TourId = 1 }
+                Name = "Test Tour",
+                Description = "Test Description",
+                From = "1200 Wien",
+                To = "4600 Wels",
+                TransportType = ETransportType.Car
             };
 
-            _databaseHandlerMock.Setup(d => d.GetTour(1)).Returns(tour);
-            _databaseHandlerMock.Setup(d => d.GetTourLogs(1)).Returns(logs);
+            await _businessLayer.AddTour(tour);
+            var addedTour = _businessLayer.GetAllTours().Last();
 
-            // Act
-            var result = _businessLayerMock.GetAllTourLogsOfTour(tour);
+            var tourLog = new TourLog
+            {
+                DateTime = DateTime.Now,
+                Comment = "Test Comment",
+                Difficulty = EDifficulty.Medium,
+                TotalDistance = 10.5,
+                TotalTime = 2.5,
+                Rating = ERating.FourStars
+            };
 
-            // Assert
-            ClassicAssert.AreEqual(logs.Count, result.Count);
-            ClassicAssert.AreEqual(logs[0].Comment, result[0].Comment);
+            _businessLayer.AddTourLogToTour(addedTour, tourLog);
+            var allTourLogsBefor = _businessLayer.GetAllTourLogsOfTour(addedTour);
+            var addedTourLog = allTourLogsBefor.Last();
+
+            _businessLayer.RemoveTourLog(addedTourLog);
+            var allTourLogsAfter = _businessLayer.GetAllTourLogsOfTour(addedTour);
+
+            Assert.That(allTourLogsAfter.Count, Is.LessThan(allTourLogsBefor.Count));
+        }
+
+
+        [Test]
+        public async Task Test_BusinessLayer_UpdateTourLog()
+        {
+            var tour = new Tour
+            {
+                Name = "Test Tour",
+                Description = "Test Description",
+                From = "1200 Wien",
+                To = "4600 Wels"
+            };
+
+            await _businessLayer.AddTour(tour);
+            var allTour = _businessLayer.GetAllTours();
+            var addedTour = allTour.Last();
+
+            var tourLog = new TourLog
+            {
+                DateTime = DateTime.Now,
+                Comment = "Old Comment",
+                Difficulty = EDifficulty.Medium,
+                TotalDistance = 10.5,
+                TotalTime = 2.5,
+                Rating = ERating.FourStars
+            };
+
+            _businessLayer.AddTourLogToTour(addedTour, tourLog);
+            var addedTourLog = _businessLayer.GetAllTourLogsOfTour(addedTour).Last();
+
+            var changedTourLog = new TourLog(addedTourLog);
+
+            changedTourLog.Comment = "New Comment";
+            changedTourLog.Difficulty = EDifficulty.Hard;
+            changedTourLog.TotalDistance = 100;
+            changedTourLog.TotalTime = 10;
+            changedTourLog.Rating = ERating.OneStars;
+
+            _businessLayer.UpdateTourLog(changedTourLog);
+            var updatedTourLog = _businessLayer.GetAllTourLogsOfTour(addedTour).Last();
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(updatedTourLog.Comment, Is.EqualTo(changedTourLog.Comment));
+                Assert.That(updatedTourLog.Difficulty, Is.EqualTo(changedTourLog.Difficulty));
+                Assert.That(updatedTourLog.TotalDistance, Is.EqualTo(changedTourLog.TotalDistance));
+                Assert.That(updatedTourLog.TotalTime, Is.EqualTo(changedTourLog.TotalTime));
+                Assert.That(updatedTourLog.Rating, Is.EqualTo(changedTourLog.Rating));
+            });
         }
     }
 }

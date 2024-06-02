@@ -16,8 +16,9 @@ namespace SWE_TourPlanner_WPF.ViewLayer
 {
     public class ViewModel : INotifyPropertyChanged
     {
-        public readonly string DirectionsFilePath;
+        private readonly string _DirectionsFilePath;
         public readonly string LeafletFilePath;
+        private readonly IBusinessLayer _BusinessLayer;
 
         public delegate Task UpdateMapDelegate();
         public UpdateMapDelegate UpdateMap { get; set; }
@@ -166,15 +167,27 @@ namespace SWE_TourPlanner_WPF.ViewLayer
                 return _reloadToursCommand ?? (_reloadToursCommand = new ICommandHandler(() => ReloadTours(), () => true));
             }
         }
+        public ViewModel(IBusinessLayer bl)
+        {
+            // For testing ONLY
 
+            _DirectionsFilePath = "DIRECTIONS";
+            LeafletFilePath = "LEAFLET";
+            _BusinessLayer = bl;
+
+            AllTours = new ObservableCollection<Tour> { };
+
+            ReloadTours();
+        }
         public ViewModel()
         {
             try
             {
                 string json = File.ReadAllText(TourPlannerConfig.ConfigFile);
                 TourPlannerConfig config = JsonConvert.DeserializeObject<TourPlannerConfig>(json);
-                DirectionsFilePath = config.ViewModel.DirectionsFilePath;
+                _DirectionsFilePath = config.ViewModel.DirectionsFilePath;
                 LeafletFilePath = config.ViewModel.LeafletFilePath;
+                _BusinessLayer = IBusinessLayer.Instance;
             }
             catch (Exception e)
             {
@@ -201,7 +214,7 @@ namespace SWE_TourPlanner_WPF.ViewLayer
         {
             try
             {
-                SelectedTour = await IBusinessLayer.Instance.AddTour(SelectedTour);
+                SelectedTour = await _BusinessLayer.AddTour(SelectedTour);
                 MessageBox.Show($"Tour {SelectedTour.Name} has been added.");
                 ReloadTours();
             }
@@ -215,7 +228,7 @@ namespace SWE_TourPlanner_WPF.ViewLayer
         {
             try
             {
-                SelectedTour = IBusinessLayer.Instance.UpdateTour(SelectedTour);
+                SelectedTour = _BusinessLayer.UpdateTour(SelectedTour);
                 MessageBox.Show($"Tour {SelectedTour.Name} has been updated.");
                 ReloadTours();
             }
@@ -231,7 +244,7 @@ namespace SWE_TourPlanner_WPF.ViewLayer
             {
                 try
                 {
-                    SelectedTour = IBusinessLayer.Instance.RemoveTour(SelectedTour);
+                    SelectedTour = _BusinessLayer.RemoveTour(SelectedTour);
                     MessageBox.Show($"Tour {SelectedTour.Name} has been deleted.");
                     ReloadTours();
                 }
@@ -248,7 +261,7 @@ namespace SWE_TourPlanner_WPF.ViewLayer
             {
                 try
                 {
-                    SelectedTour = IBusinessLayer.Instance.PrintReportPDF(SelectedTour);
+                    SelectedTour = _BusinessLayer.PrintReportPDF(SelectedTour);
                     MessageBox.Show($"Tour {SelectedTour.Name}: Report has been printed.");
                     ReloadTours();
                 }
@@ -265,7 +278,7 @@ namespace SWE_TourPlanner_WPF.ViewLayer
             {
                 try
                 {
-                    SelectedTour = IBusinessLayer.Instance.PrintSummarizedReportPDF(SelectedTour);
+                    SelectedTour = _BusinessLayer.PrintSummarizedReportPDF(SelectedTour);
                     MessageBox.Show($" {SelectedTour.Name}: Summarized Report has been printed.");
                     ReloadTours();
                 }
@@ -282,7 +295,7 @@ namespace SWE_TourPlanner_WPF.ViewLayer
             {
                 try
                 {
-                    SelectedTour = IBusinessLayer.Instance.ExportTourToJson(SelectedTour);
+                    SelectedTour = _BusinessLayer.ExportTourToJson(SelectedTour);
                     MessageBox.Show($"Tours has been exported.");
                     ReloadTours();
                 }
@@ -297,7 +310,7 @@ namespace SWE_TourPlanner_WPF.ViewLayer
         {
             try
             {
-                List<Tour> importedTours = await IBusinessLayer.Instance.ImportToursFromJson();
+                List<Tour> importedTours = await _BusinessLayer.ImportToursFromJson();
                 MessageBox.Show($"{importedTours.Count} Tours have been imported.");
                 ReloadTours();
             }
@@ -316,7 +329,7 @@ namespace SWE_TourPlanner_WPF.ViewLayer
                 {
                     prevSelectedTour = new Tour(SelectedTour);
                 }
-                AllTours = new ObservableCollection<Tour>(IBusinessLayer.Instance.GetAllTours());
+                AllTours = new ObservableCollection<Tour>(_BusinessLayer.GetAllTours());
 
                 //reapply filter
                 SearchFilter = SearchFilter;
@@ -349,7 +362,7 @@ namespace SWE_TourPlanner_WPF.ViewLayer
             {
                 var directionsContent = $"var directions = {SelectedTour.OSMjson};";
                 string appDir = AppDomain.CurrentDomain.BaseDirectory;
-                string filePath = Path.Combine(appDir, DirectionsFilePath);
+                string filePath = Path.Combine(appDir, _DirectionsFilePath);
                 File.WriteAllText(filePath, directionsContent);
                 if (UpdateMap != null)
                     UpdateMap();

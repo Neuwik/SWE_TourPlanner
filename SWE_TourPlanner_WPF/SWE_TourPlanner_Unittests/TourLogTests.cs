@@ -1,11 +1,6 @@
-﻿using NUnit.Framework.Legacy;
-using SWE_TourPlanner_WPF;
+﻿using NUnit.Framework;
 using SWE_TourPlanner_WPF.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SWE_TourPlanner_Unittests
 {
@@ -13,121 +8,115 @@ namespace SWE_TourPlanner_Unittests
     public class TourLogTests
     {
         [Test]
-        public void Constructor_WithParameters_SetsPropertiesCorrectly()
+        public void Test_TourLog_DefaultConstructor()
         {
-            DateTime dateTime = DateTime.Now;
-            string comment = "Test comment";
-            EDifficulty difficulty = EDifficulty.Medium;
-            float totalDistance = 10.5f;
-            float totalTime = 2.5f;
-            ERating rating = ERating.FiveStars;
+            var tourLog = new TourLog();
+            var dateTimeNow = DateTime.Now.ToUniversalTime();
+
+            Assert.That(tourLog.Id, Is.EqualTo(0));
+            Assert.That(tourLog.TourId, Is.EqualTo(0));
+            Assert.That(tourLog.Comment, Is.EqualTo("---"));
+            Assert.That(tourLog.Difficulty, Is.EqualTo(EDifficulty.Medium));
+            Assert.That(tourLog.TotalDistance, Is.EqualTo(0));
+            Assert.That(tourLog.TotalTime, Is.EqualTo(0));
+            Assert.That(tourLog.Rating, Is.EqualTo(ERating.ThreeStars));
+            Assert.That(tourLog.DateTime, Is.EqualTo(dateTimeNow).Within(1).Minutes);
+        }
+
+        [Test]
+        public void Test_TourLog_ParameterizedConstructor()
+        {
+            var dateTime = new DateTime(2023, 1, 1);
+            var comment = "Great tour!";
+            var difficulty = EDifficulty.Hard;
+            var totalDistance = 10.5;
+            var totalTime = 5.25;
+            var rating = ERating.FiveStars;
 
             var tourLog = new TourLog(dateTime, comment, difficulty, totalDistance, totalTime, rating);
 
-            ClassicAssert.AreEqual(dateTime, tourLog.DateTime);
-            ClassicAssert.AreEqual(comment, tourLog.Comment);
-            ClassicAssert.AreEqual(difficulty, tourLog.Difficulty);
-            ClassicAssert.AreEqual(totalDistance, tourLog.TotalDistance);
-            ClassicAssert.AreEqual(totalTime, tourLog.TotalTime);
-            ClassicAssert.AreEqual(rating, tourLog.Rating);
-        }
-        [Test]
-        public void DefaultConstructor_SetsDefaultValues()
-        {
-            // Arrange & Act
-            var tourLog = new TourLog();
-
-            // Assert
-            ClassicAssert.AreEqual("---", tourLog.Comment);
-            ClassicAssert.AreEqual(EDifficulty.Medium, tourLog.Difficulty);
-            ClassicAssert.AreEqual(0, tourLog.TotalDistance);
-            ClassicAssert.AreEqual(0, tourLog.TotalTime);
-            ClassicAssert.AreEqual(ERating.ThreeStars, tourLog.Rating);
-            ClassicAssert.AreEqual(DateTime.Now.Date, tourLog.DateTime.Date);
+            Assert.That(tourLog.Id, Is.EqualTo(0));
+            Assert.That(tourLog.TourId, Is.EqualTo(0));
+            Assert.That(tourLog.DateTime, Is.EqualTo(dateTime.ToUniversalTime()));
+            Assert.That(tourLog.Comment, Is.EqualTo(comment));
+            Assert.That(tourLog.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(tourLog.TotalDistance, Is.EqualTo(totalDistance));
+            Assert.That(tourLog.TotalTime, Is.EqualTo(totalTime));
+            Assert.That(tourLog.Rating, Is.EqualTo(rating));
         }
 
         [Test]
-        public void CopyConstructor_CopiesPropertiesCorrectly()
+        public void Test_TourLog_CopyConstructor()
         {
-
             var original = new TourLog
             {
-                DateTime = DateTime.Now,
-                Comment = "Original comment",
+                Id = 1,
+                TourId = 2,
+                DateTime = new DateTime(2023, 1, 1),
+                Comment = "Amazing!",
                 Difficulty = EDifficulty.Easy,
-                TotalDistance = 15.7f,
-                TotalTime = 3.0f,
+                TotalDistance = 15.0,
+                TotalTime = 3.0,
                 Rating = ERating.FourStars
             };
 
             var copy = new TourLog(original);
 
-            ClassicAssert.AreEqual(original.DateTime, copy.DateTime);
-            ClassicAssert.AreEqual(original.Comment, copy.Comment);
-            ClassicAssert.AreEqual(original.Difficulty, copy.Difficulty);
-            ClassicAssert.AreEqual(original.TotalDistance, copy.TotalDistance);
-            ClassicAssert.AreEqual(original.TotalTime, copy.TotalTime);
-            ClassicAssert.AreEqual(original.Rating, copy.Rating);
-        }
-        [Test]
-        public void Update_UpdatesValues()
-        {
-            // Arrange
-            var original = new TourLog
-            {
-                DateTime = new DateTime(2023, 5, 1, 10, 0, 0),
-                Comment = "Original comment",
-                Difficulty = EDifficulty.Easy,
-                TotalDistance = 12.3,
-                TotalTime = 1800,
-                Rating = ERating.FourStars
-            };
-
-            var updated = new TourLog
-            {
-                DateTime = new DateTime(2024, 6, 2, 15, 30, 0),
-                Comment = "Updated comment",
-                Difficulty = EDifficulty.Hard,
-                TotalDistance = 20.5,
-                TotalTime = 3600,
-                Rating = ERating.FiveStars
-            };
-
-            // Act
-            original.Update(updated);
-
-            // Assert
-            
-            ClassicAssert.AreEqual(updated.DateTime, original.DateTime);
-            ClassicAssert.AreEqual(updated.Comment, original.Comment);
-            ClassicAssert.AreEqual(updated.Difficulty, original.Difficulty);
-            ClassicAssert.AreEqual(updated.TotalDistance, original.TotalDistance);
-            ClassicAssert.AreEqual(updated.TotalTime, original.TotalTime);
-            ClassicAssert.AreEqual(updated.Rating, original.Rating);
+            Assert.That(copy.Id, Is.EqualTo(original.Id));
+            Assert.That(copy.TourId, Is.EqualTo(original.TourId));
+            Assert.That(copy.DateTime, Is.EqualTo(original.DateTime));
+            Assert.That(copy.Comment, Is.EqualTo(original.Comment));
+            Assert.That(copy.Difficulty, Is.EqualTo(original.Difficulty));
+            Assert.That(copy.TotalDistance, Is.EqualTo(original.TotalDistance));
+            Assert.That(copy.TotalTime, Is.EqualTo(original.TotalTime));
+            Assert.That(copy.Rating, Is.EqualTo(original.Rating));
         }
 
         [Test]
-        public void ToString_ReturnsCorrectFormat()
+        public void Test_TourLog_Update()
         {
-            // Arrange
             var tourLog = new TourLog
             {
                 Id = 1,
-                TourId = 10,
-                DateTime = new DateTime(2023, 5, 1, 10, 0, 0),
-                Comment = "Test comment",
-                Difficulty = EDifficulty.Medium,
-                TotalDistance = 15.5,
-                TotalTime = 3600,
-                Rating = ERating.ThreeStars
+                TourId = 2,
+                DateTime = new DateTime(2023, 1, 1),
+                Comment = "Initial comment",
+                Difficulty = EDifficulty.Easy,
+                TotalDistance = 10.0,
+                TotalTime = 2.0,
+                Rating = ERating.TwoStars
             };
 
-            // Act
-            var result = tourLog.ToString();
+            var updatedLog = new TourLog
+            {
+                DateTime = new DateTime(2024, 1, 1),
+                Comment = "Updated comment",
+                Difficulty = EDifficulty.Hard,
+                TotalDistance = 20.0,
+                TotalTime = 4.0,
+                Rating = ERating.FiveStars
+            };
 
-            // Assert
-            var expected = "TourLog Id: 1, TourId: 10, DateTime: 5/1/2023 10:00:00 AM, Comment: Test comment, Difficulty: medium, TotalDistance: 15.5, TotalTime: 3600, Rating: ThreeStars";
-            ClassicAssert.AreEqual(expected, result);
+            tourLog.Update(updatedLog);
+
+            Assert.That(tourLog.DateTime, Is.EqualTo(updatedLog.DateTime));
+            Assert.That(tourLog.Comment, Is.EqualTo(updatedLog.Comment));
+            Assert.That(tourLog.Difficulty, Is.EqualTo(updatedLog.Difficulty));
+            Assert.That(tourLog.TotalDistance, Is.EqualTo(updatedLog.TotalDistance));
+            Assert.That(tourLog.TotalTime, Is.EqualTo(updatedLog.TotalTime));
+            Assert.That(tourLog.Rating, Is.EqualTo(updatedLog.Rating));
+        }
+
+        [Test]
+        public void Test_TourLog_DateTimeSetterUTC()
+        {
+            var tourLog = new TourLog();
+            var localTime = new DateTime(2023, 1, 1, 12, 0, 0, DateTimeKind.Local);
+            var expectedUniversalTime = localTime.ToUniversalTime();
+
+            tourLog.DateTime = localTime;
+
+            Assert.That(tourLog.DateTime, Is.EqualTo(expectedUniversalTime));
         }
     }
 }
